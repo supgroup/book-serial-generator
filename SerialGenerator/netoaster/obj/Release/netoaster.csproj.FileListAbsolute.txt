@@ -1,0 +1,15 @@
+D:\Github\book-account\BookAccountApp\netoaster\bin\Release\netoaster.dll
+D:\Github\book-account\BookAccountApp\netoaster\bin\Release\netoaster.pdb
+D:\Github\book-account\BookAccountApp\netoaster\obj\Release\netoaster.csprojAssemblyReference.cache
+D:\Github\book-account\BookAccountApp\netoaster\obj\Release\ToasterWindow.g.cs
+D:\Github\book-account\BookAccountApp\netoaster\obj\Release\GeneratedInternalTypeHelper.g.cs
+D:\Github\book-account\BookAccountApp\netoaster\obj\Release\netoaster_MarkupCompile.cache
+D:\Github\book-account\BookAccountApp\netoaster\obj\Release\netoaster_MarkupCompile.lref
+D:\Github\book-account\BookAccountApp\netoaster\obj\Release\Themes\Generic.baml
+D:\Github\book-account\BookAccountApp\netoaster\obj\Release\ToasterWindow.baml
+D:\Github\book-account\BookAccountApp\netoaster\obj\Release\netoaster.g.resources
+D:\Github\book-account\BookAccountApp\netoaster\obj\Release\netoaster.Properties.Resources.resources
+D:\Github\book-account\BookAccountApp\netoaster\obj\Release\netoaster.csproj.GenerateResource.cache
+D:\Github\book-account\BookAccountApp\netoaster\obj\Release\netoaster.csproj.CoreCompileInputs.cache
+D:\Github\book-account\BookAccountApp\netoaster\obj\Release\netoaster.dll
+D:\Github\book-account\BookAccountApp\netoaster\obj\Release\netoaster.pdb
