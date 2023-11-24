@@ -1,0 +1,593 @@
+﻿<Application x:Class="SerialGenerator.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:SerialGenerator"
+             xmlns:converters="clr-namespace:SerialGenerator.converters"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             Startup="Application_Startup"
+           >
+    <!--StartupUri="MainWindow.xaml"-->
+    <Application.Resources>
+        <ResourceDictionary>
+            <converters:countConverter x:Key="countConverter"/>
+            <converters:dateFrameConverter x:Key="dateFrameConverter"/>
+            <!--#region Fonts-->
+            <FontFamily x:Key="Font-cairo-light" >cairo light, /SerialGenerator;component/fonts/cairo-font/#cairo light, Arial</FontFamily>
+            <FontFamily x:Key="Font-cairo-bold" >cairo bold , /SerialGenerator;component/fonts/cairo-font/#cairo bold, Arial</FontFamily>
+            <FontFamily x:Key="Font-cairo-regular" >Cairo, /SerialGenerator;component/fonts/cairo-font/#Cairo Regular 400, Arial</FontFamily>
+
+
+            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                <Setter Property="FontFamily" Value="{StaticResource Font-cairo-regular}"/>
+            </Style>
+            
+            <!--#region  DataGrid-->
+            <!--<Style TargetType="DataGridRow">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding isActive}" Value="0">
+                        <Setter Property="TextBlock.TextDecorations" Value="Strikethrough " />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            <Style x:Key="strikethrough">
+                <Setter Property="TextBlock.TextDecorations" Value="Strikethrough " />
+            </Style>-->
+            <!--#endregion-->
+            
+        <!--#endregion-->
+        <Style x:Key="ToolTipError" TargetType="{x:Type ToolTip}" BasedOn="{StaticResource {x:Type ToolTip}}">
+            <Setter Property="Foreground" Value="Red"/>
+            <Setter Property="Background" Value="#15FF0000"/>
+        </Style>
+        <!--#region ScrollBarTrackThumb-->
+        <Style x:Key="ScrollBarTrackThumb"
+        TargetType="{x:Type Thumb}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Grid x:Name="Grid">
+                            <Rectangle HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Width="Auto"
+                                Height="Auto"
+                                Fill="Transparent" />
+                            <Border x:Name="CornerScrollBarRectangle"
+                            CornerRadius="5"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Width="Auto"
+                            Height="Auto"
+                            Margin="0,1,0,1"
+                            Background="{TemplateBinding Background}" />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Tag"
+                                Value="Horizontal">
+                                <Setter TargetName="CornerScrollBarRectangle"
+                                Property="Width"
+                                Value="Auto" />
+                                <Setter TargetName="CornerScrollBarRectangle"
+                                Property="Height"
+                                Value="6" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="{x:Type ScrollBar}">
+            <Setter Property="Stylus.IsFlicksEnabled"
+            Value="false" />
+            <Setter Property="Foreground"
+            Value="#ADABAB" />
+            <Setter Property="Background"
+            Value="Transparent" />
+            <Setter Property="Width"
+            Value="7" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ScrollBar}">
+                        <Grid x:Name="GridRoot"
+                        Width="7"
+                        Background="{TemplateBinding Background}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="0.00001*" />
+                            </Grid.RowDefinitions>
+                            <Track x:Name="PART_Track"
+                            Grid.Row="0"
+                            IsDirectionReversed="true"
+                            Focusable="false">
+                                <Track.Thumb>
+                                    <Thumb x:Name="Thumb"
+                                    Background="{TemplateBinding Foreground}"
+                                    Style="{DynamicResource ScrollBarTrackThumb}" />
+                                </Track.Thumb>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton x:Name="PageUp"
+                                            Command="ScrollBar.PageDownCommand"
+                                            Opacity="0"
+                                            Focusable="false" />
+                                </Track.IncreaseRepeatButton>
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton x:Name="PageDown"
+                                            Command="ScrollBar.PageUpCommand"
+                                            Opacity="0"
+                                            Focusable="false" />
+                                </Track.DecreaseRepeatButton>
+                            </Track>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger SourceName="Thumb"
+                                Property="IsMouseOver"
+                                Value="true">
+                                <Setter Value="{DynamicResource ButtonSelectBrush}"
+                                TargetName="Thumb"
+                                Property="Background" />
+                            </Trigger>
+                            <Trigger SourceName="Thumb"
+                                Property="IsDragging"
+                                Value="true">
+                                <Setter Value="{DynamicResource DarkBrush}"
+                                TargetName="Thumb"
+                                Property="Background" />
+                            </Trigger>
+
+                            <Trigger Property="IsEnabled"
+                                Value="false">
+                                <Setter TargetName="Thumb"
+                                Property="Visibility"
+                                Value="Collapsed" />
+                            </Trigger>
+                            <Trigger Property="Orientation"
+                                Value="Horizontal">
+                                <Setter TargetName="GridRoot"
+                                Property="LayoutTransform">
+                                    <Setter.Value>
+                                        <RotateTransform Angle="-90" />
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="PART_Track"
+                                Property="LayoutTransform">
+                                    <Setter.Value>
+                                        <RotateTransform Angle="-90" />
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Width"
+                                Value="Auto" />
+                                <Setter Property="Height"
+                                Value="8" />
+                                <Setter TargetName="Thumb"
+                                Property="Tag"
+                                Value="Horizontal" />
+                                <Setter TargetName="PageDown"
+                                Property="Command"
+                                Value="ScrollBar.PageLeftCommand" />
+                                <Setter TargetName="PageUp"
+                                Property="Command"
+                                Value="ScrollBar.PageRightCommand" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!--#endregion-->
+            
+            
+            <!--#region Button-->
+            <Style x:Key="SmallButtonCircleRotate20" TargetType="Button">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Grid x:Name="grid" Background="#02FFFFFF">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="CommonStates">
+                                        <VisualState x:Name="Normal">
+                                            <Storyboard>
+                                                <DoubleAnimation Duration="0:0:0.6" To="20" Storyboard.TargetProperty="Height" Storyboard.TargetName="X" />
+                                                <DoubleAnimation Duration="0:0:0.6" To="20" Storyboard.TargetProperty="Width" Storyboard.TargetName="X" />
+                                                <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="X"/>
+                                            </Storyboard>
+                                        </VisualState>
+                                        <VisualState x:Name="MouseOver">
+                                            <Storyboard>
+                                                <DoubleAnimation Duration="0" To="0.95" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="X"/>
+                                                <ColorAnimation Duration="0:0:0.6" To="#178DD2"
+                                                Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Storyboard.TargetName="X"/>
+                                            </Storyboard>
+                                        </VisualState>
+                                        <VisualState x:Name="Pressed">
+                                            <Storyboard>
+                                                <ColorAnimation Duration="0:0:0.3" To="#9CD0EF"
+                                                Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Storyboard.TargetName="X"/>
+                                            </Storyboard>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                                <Rectangle x:Name="rectangle" Fill="{TemplateBinding Background}" RadiusX="15" RadiusY="15" Opacity="1"/>
+                                <Path x:Name="X" Margin="0"  Data="{Binding}"
+                              Fill="#178DD2" HorizontalAlignment="Center" 
+                                      Stretch="Fill" VerticalAlignment="Center" Height="20" Width="20"/>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Trigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimationUsingKeyFrames  Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)" >
+                                                    <EasingDoubleKeyFrame KeyTime="0:0:0" Value="-90"/>
+                                                    <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="-360"/>
+                                                </DoubleAnimationUsingKeyFrames>
+                                                <!--<DoubleAnimationUsingKeyFrames RepeatBehavior="Forever" Storyboard.TargetProperty="Height" >
+                                                    <EasingDoubleKeyFrame KeyTime="0:0:0" Value="50"/>
+                                                    <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="52.5"/>
+                                                    <EasingDoubleKeyFrame KeyTime="0:0:1" Value="55"/>
+                                                    <EasingDoubleKeyFrame KeyTime="0:0:1.5" Value="52.5"/>
+                                                    <EasingDoubleKeyFrame KeyTime="0:0:2" Value="50"/>
+                                                </DoubleAnimationUsingKeyFrames>
+                                                <DoubleAnimationUsingKeyFrames RepeatBehavior="Forever" Storyboard.TargetProperty="Width" >
+                                                    <EasingDoubleKeyFrame KeyTime="0:0:0" Value="50"/>
+                                                    <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="52.5"/>
+                                                    <EasingDoubleKeyFrame KeyTime="0:0:1" Value="55"/>
+                                                    <EasingDoubleKeyFrame KeyTime="0:0:1.5" Value="52.5"/>
+                                                    <EasingDoubleKeyFrame KeyTime="0:0:2" Value="50"/>
+                                                </DoubleAnimationUsingKeyFrames>-->
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.EnterActions>
+                                    <!--<Trigger.ExitActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Duration="0:0:0.2" To="50" Storyboard.TargetProperty="Height" />
+                                                <DoubleAnimation Duration="0:0:0.2" To="50" Storyboard.TargetProperty="Width" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.ExitActions>-->
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+
+            </Style>
+            <Style x:Key="SmallButtonCircleRotate" TargetType="Button">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Grid x:Name="grid" Background="#02FFFFFF">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="CommonStates">
+                                        <VisualState x:Name="Normal">
+                                            <Storyboard>
+                                                <DoubleAnimation Duration="0:0:0.6" To="27.5" Storyboard.TargetProperty="Height" Storyboard.TargetName="X" />
+                                                <DoubleAnimation Duration="0:0:0.6" To="27.5" Storyboard.TargetProperty="Width" Storyboard.TargetName="X" />
+                                                <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="X"/>
+                                            </Storyboard>
+                                        </VisualState>
+                                        <VisualState x:Name="MouseOver">
+                                            <Storyboard>
+                                                <DoubleAnimation Duration="0" To="0.95" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="X"/>
+                                                <ColorAnimation Duration="0:0:0.6" To="#178DD2"
+                                                Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Storyboard.TargetName="X"/>
+                                            </Storyboard>
+                                        </VisualState>
+                                        <VisualState x:Name="Pressed">
+                                            <Storyboard>
+                                                <ColorAnimation Duration="0:0:0.3" To="#9CD0EF"
+                                                Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Storyboard.TargetName="X"/>
+                                            </Storyboard>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                                <Rectangle x:Name="rectangle" Fill="{TemplateBinding Background}" RadiusX="15" RadiusY="15" Opacity="1"/>
+                                <Path x:Name="X" Margin="0"  Data="{Binding}"
+                              Fill="#178DD2" HorizontalAlignment="Center" 
+                                      Stretch="Fill" VerticalAlignment="Center" Height="27.5" Width="27.5"/>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Trigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimationUsingKeyFrames  Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)" >
+                                                    <EasingDoubleKeyFrame KeyTime="0:0:0" Value="-90"/>
+                                                    <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="-360"/>
+                                                </DoubleAnimationUsingKeyFrames>
+                                                <!--<DoubleAnimationUsingKeyFrames RepeatBehavior="Forever" Storyboard.TargetProperty="Height" >
+                                                    <EasingDoubleKeyFrame KeyTime="0:0:0" Value="50"/>
+                                                    <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="52.5"/>
+                                                    <EasingDoubleKeyFrame KeyTime="0:0:1" Value="55"/>
+                                                    <EasingDoubleKeyFrame KeyTime="0:0:1.5" Value="52.5"/>
+                                                    <EasingDoubleKeyFrame KeyTime="0:0:2" Value="50"/>
+                                                </DoubleAnimationUsingKeyFrames>
+                                                <DoubleAnimationUsingKeyFrames RepeatBehavior="Forever" Storyboard.TargetProperty="Width" >
+                                                    <EasingDoubleKeyFrame KeyTime="0:0:0" Value="50"/>
+                                                    <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="52.5"/>
+                                                    <EasingDoubleKeyFrame KeyTime="0:0:1" Value="55"/>
+                                                    <EasingDoubleKeyFrame KeyTime="0:0:1.5" Value="52.5"/>
+                                                    <EasingDoubleKeyFrame KeyTime="0:0:2" Value="50"/>
+                                                </DoubleAnimationUsingKeyFrames>-->
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.EnterActions>
+                                    <!--<Trigger.ExitActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Duration="0:0:0.2" To="50" Storyboard.TargetProperty="Height" />
+                                                <DoubleAnimation Duration="0:0:0.2" To="50" Storyboard.TargetProperty="Width" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.ExitActions>-->
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+
+            </Style>
+            <!--#endregion-->
+            <Geometry x:Key="refreshCyrcle" >M896,0L896,0C401.2,0,0,401.2,0,896v0c0,494.8,401.2,896,896,896h0c494.8,0,896-401.2,896-896v0C1792,401.2,1390.8,0,896,0z
+	 M1451.3,1021c-31.9,133.7-98.8,242.1-200.6,325.2c-101.8,83.1-221,124.6-357.7,124.6c-72.8,0-143.3-13.7-211.4-41.2
+	s-128.8-66.6-182.2-117.5l-96.5,96.5c-9.5,9.5-20.7,14.2-33.7,14.2s-24.2-4.7-33.7-14.2c-9.5-9.5-14.2-20.7-14.2-33.7v-335.3
+	c0-13,4.7-24.2,14.2-33.7s20.7-14.2,33.7-14.2h335.3c13,0,24.2,4.7,33.7,14.2c9.5,9.5,14.2,20.7,14.2,33.7c0,13-4.7,24.2-14.2,33.7
+	l-102.5,102.5c35.4,32.9,75.6,58.4,120.5,76.3c44.9,18,91.5,26.9,139.9,26.9c66.9,0,129.2-16.2,187.1-48.6
+	c57.9-32.4,104.3-77.1,139.2-134c5.5-8.5,18.7-37.7,39.7-87.6c4-11.5,11.5-17.2,22.4-17.2h143.7c6.5,0,12.1,2.4,16.8,7.1
+	c4.7,4.7,7.1,10.4,7.1,16.8C1452,1018.2,1451.8,1020,1451.3,1021z M1470.7,752.3c0,13-4.7,24.2-14.2,33.7
+	c-9.5,9.5-20.7,14.2-33.7,14.2h-335.3c-13,0-24.2-4.7-33.7-14.2s-14.2-20.7-14.2-33.7c0-13,4.7-24.2,14.2-33.7l103.3-103.3
+	C1083.3,547,996.3,512.9,896,512.9c-66.9,0-129.2,16.2-187.1,48.6s-104.3,77.1-139.2,134c-5.5,8.5-18.7,37.7-39.7,87.6
+	c-4,11.5-11.5,17.2-22.5,17.2H358.7c-6.5,0-12.1-2.4-16.8-7.1c-4.7-4.7-7.1-10.4-7.1-16.8V771c32.4-133.7,99.8-242.1,202-325.2
+	c102.3-83.1,222-124.6,359.2-124.6c72.8,0,143.7,13.8,212.5,41.5s130,66.7,183.3,117.1l97.3-96.5c9.5-9.5,20.7-14.2,33.7-14.2
+	s24.2,4.7,33.7,14.2c9.5,9.5,14.2,20.7,14.2,33.7V752.3z</Geometry>
+            <Geometry x:Key="checkCircle" >M321,152.1c-31.3,0-57.5-26.2-57.5-57.5c0-31.5,26.1-57.5,57.7-57.5c31.3,0,57.3,26.1,57.3,57.4
+	C378.6,125.9,352.5,152.1,321,152.1z M281.1,94.5c9.5,9.5,19.1,19.1,28.3,28.3c17.1-17.1,34.4-34.4,51.6-51.6
+	c-2.5-2.5-5.2-5.1-7.9-7.7c-14.4,14.4-28.9,28.9-43.7,43.8c-7.1-7.2-13.8-14.1-20.5-20.9C286.3,89.3,283.6,91.9,281.1,94.5z</Geometry>
+            <Geometry x:Key="cancelCircle" >M279.8,226c-45.1,0-82.2-37.2-82.1-82.2c0.1-45.2,37.1-81.9,82.4-81.9c44.8,0,81.7,37,81.8,82
+	C362,188.9,324.9,226,279.8,226z M250.8,185.3c9.7-9.7,19.3-19.4,29.2-29.4c9.7,9.8,19.4,19.6,28.8,29.1c4.1-4.1,7.9-7.9,12.1-12.2
+	c-9.5-9.5-19.3-19.2-29.5-29.2c9.9-9.8,19.6-19.5,28.9-28.7c-3.8-4-7.5-8-11.5-12.2c-9.7,9.8-19.3,19.5-29.3,29.5
+	c-9.8-9.9-19.5-19.6-29.1-29.3c-4,4.1-7.9,7.9-12.2,12.2c9.7,9.6,19.5,19.3,29.7,29.5c-9.8,9.7-19.6,19.4-29.1,28.8
+	C242.9,177.2,246.6,181,250.8,185.3z</Geometry>
+
+            <Geometry x:Key="infoCircle" >M12,2 C6.48,2 2,6.48 2,12 C2,17.52 6.48,22 12,22 C17.52,22 22,17.52 22,12 C22,6.48 17.52,2 12,2 Z M12,13 C11.45,13 11,12.55 11,12 L11,8 C11,7.45 11.45,7 12,7 C12.55,7 13,7.45 13,8 L13,12 C13,12.55 12.55,13 12,13 Z M13,17 L11,17 L11,15 L13,15 L13,17 Z</Geometry>
+            <Geometry x:Key="shoppingCart" >M22.6,18.9h93.3c6.1,0,5.8,2.5,5.2,8.8l-3.5,44.2c-0.6,7.1-0.1,5.3-7.6,6.4L41.5,87l3.6,10.5
+	c29.8,0,44.2,0,73.9,0c1,3.7,2.4,9.8,3.4,14h-12.3l-1.2-4.3c-24.8,0-34.3,0-59.1,0c-13.5-0.2-12.2,3.4-15.4-8.3L11.2,14.4H0V6.3
+	h19.6C20.5,9.7,21.8,15.4,22.6,18.9L22.6,18.9z M53.7,110.2c5.2,0,9.5,4.3,9.5,9.5c0,5.2-4.2,9.5-9.5,9.5s-9.5-4.2-9.5-9.5
+	C44.2,114.4,48.5,110.2,53.7,110.2L53.7,110.2z M92.8,110.2c5.2,0,9.5,4.3,9.5,9.5c0,5.2-4.3,9.5-9.5,9.5c-5.2,0-9.5-4.2-9.5-9.5
+	C83.3,114.4,87.6,110.2,92.8,110.2L92.8,110.2z M30.8,49.3h15.1l-5.5-22.9c-5.4,0-10.7,0-15.9,0l1.8,6.9l0.1,0L30.8,49.3L30.8,49.3
+	L30.8,49.3z M48.3,26.4l5.5,22.9h14.5l-5.5-22.9L48.3,26.4L48.3,26.4L48.3,26.4z M70.7,26.5l5.5,22.9h13.9l-5.5-22.9L70.7,26.5
+	L70.7,26.5L70.7,26.5z M92.6,26.5l5.5,22.9H112l1.5-18.4c0.4-5.1,1.3-4.5-3.6-4.5C104.2,26.5,98.4,26.5,92.6,26.5L92.6,26.5
+	L92.6,26.5z M111.5,55.1h-12l4,16.6l1-0.1c6.1-0.9,5.7,0.5,6.2-5.2L111.5,55.1L111.5,55.1z M95.8,72.8l-4.2-17.6H77.6l4.7,19.4
+	L95.8,72.8L95.8,72.8L95.8,72.8z M74.7,75.6l-4.9-20.5H55.2l5.4,22.4L74.7,75.6L74.7,75.6L74.7,75.6z M52.9,78.6l-5.6-23.5H32.4
+	l7,25.3L52.9,78.6L52.9,78.6z M71.6,0C71.6,0,71.6,0,71.6,0C71.6,0,71.6,0,71.6,0C71.6,0,71.6,0,71.6,0C71.6,0,71.6,0,71.6,0z
+	 M0,71.9C0,71.9,0,71.9,0,71.9C0,71.9,0,71.9,0,71.9C0,71.9,0,71.9,0,71.9C0,71.9,0,71.9,0,71.9z M71.6,143.8
+	C71.6,143.8,71.6,143.8,71.6,143.8C71.6,143.8,71.6,143.8,71.6,143.8C71.6,143.8,71.6,143.8,71.6,143.8
+	C71.6,143.8,71.6,143.8,71.6,143.8z M143.2,71.9C143.2,71.9,143.2,71.9,143.2,71.9C143.2,71.9,143.2,71.9,143.2,71.9
+	C143.2,71.9,143.3,71.9,143.2,71.9C143.3,71.9,143.2,71.9,143.2,71.9z</Geometry>
+            <Geometry x:Key="accounts" >M 19 1 C 17.707983 1 16.605718 1.8442551 16.1875 3 L 5 3 C 3.346 3 2 4.346 2 6 L 2 41 C 2 42.654 3.346 44 5 44 L 21 44 L 21 21 C 21 18.243 23.243 16 26 16 L 36 16 L 36 6 C 36 4.346 34.654 3 33 3 L 21.8125 3 C 21.394282 1.8442551 20.292017 1 19 1 z M 19 3 C 19.564129 3 20 3.4358709 20 4 C 20 4.5641291 19.564129 5 19 5 C 18.435871 5 18 4.5641291 18 4 C 18 3.4358709 18.435871 3 19 3 z M 11 5 L 16.1875 5 C 16.605718 6.1557449 17.707983 7 19 7 C 20.292017 7 21.394282 6.1557449 21.8125 5 L 27 5 L 27 8 C 27 9.105 26.105 10 25 10 L 13 10 C 11.895 10 11 9.105 11 8 L 11 7 L 11 5 z M 11 15 L 13 15 L 13 21 L 15 21 L 15 17 L 17 17 L 17 21 L 19 21 L 19 23 L 5 23 L 5 21 L 7 21 L 7 18 L 9 18 L 9 21 L 11 21 L 11 15 z M 26 18 C 24.346 18 23 19.346 23 21 L 23 44 C 23 45.654 24.346 47 26 47 L 44 47 C 45.654 47 47 45.654 47 44 L 47 21 C 47 19.346 45.654 18 44 18 L 26 18 z M 28 22 L 42 22 C 42.553 22 43 22.448 43 23 L 43 27 C 43 27.553 42.553 28 42 28 L 28 28 C 27.447 28 27 27.553 27 27 L 27 23 C 27 22.448 27.447 22 28 22 z M 12 27 C 15.309 27 18 29.691 18 33 C 18 36.309 15.309 39 12 39 C 8.691 39 6 36.309 6 33 C 6 29.691 8.691 27 12 27 z M 12 29 C 9.794 29 8 30.794 8 33 C 8 35.206 9.794 37 12 37 C 14.206 37 16 35.206 16 33 L 12 33 L 12 29 z M 28 30 L 30 30 C 30.552 30 31 30.448 31 31 L 31 32 C 31 32.552 30.552 33 30 33 L 28 33 C 27.448 33 27 32.552 27 32 L 27 31 C 27 30.448 27.448 30 28 30 z M 34 30 L 36 30 C 36.552 30 37 30.448 37 31 L 37 32 C 37 32.552 36.552 33 36 33 L 34 33 C 33.448 33 33 32.552 33 32 L 33 31 C 33 30.448 33.448 30 34 30 z M 40 30 L 42 30 C 42.552 30 43 30.448 43 31 L 43 32 C 43 32.552 42.552 33 42 33 L 40 33 C 39.448 33 39 32.552 39 32 L 39 31 C 39 30.448 39.448 30 40 30 z M 28 35 L 30 35 C 30.552 35 31 35.448 31 36 L 31 37 C 31 37.552 30.552 38 30 38 L 28 38 C 27.448 38 27 37.552 27 37 L 27 36 C 27 35.448 27.448 35 28 35 z M 34 35 L 36 35 C 36.552 35 37 35.448 37 36 L 37 37 C 37 37.552 36.552 38 36 38 L 34 38 C 33.448 38 33 37.552 33 37 L 33 36 C 33 35.448 33.448 35 34 35 z M 40 35 L 42 35 C 42.552 35 43 35.448 43 36 L 43 37 C 43 37.552 42.552 38 42 38 L 40 38 C 39.448 38 39 37.552 39 37 L 39 36 C 39 35.448 39.448 35 40 35 z M 28 40 L 30 40 C 30.552 40 31 40.448 31 41 L 31 42 C 31 42.552 30.552 43 30 43 L 28 43 C 27.448 43 27 42.552 27 42 L 27 41 C 27 40.448 27.448 40 28 40 z M 34 40 L 36 40 C 36.552 40 37 40.448 37 41 L 37 42 C 37 42.552 36.552 43 36 43 L 34 43 C 33.448 43 33 42.552 33 42 L 33 41 C 33 40.448 33.448 40 34 40 z M 40 40 L 42 40 C 42.552 40 43 40.448 43 41 L 43 42 C 43 42.552 42.552 43 42 43 L 40 43 C 39.448 43 39 42.552 39 42 L 39 41 C 39 40.448 39.448 40 40 40 z</Geometry>
+            <Geometry x:Key="reports" >M77.3,42.5l26,0.1c0,6.9-2.8,13.6-7.7,18.4c-1.2,1.1-2.4,2.2-3.8,3.1L77.3,42.5z M104.4,35.3
+	c0,0.5-0.4,1-0.9,1.1l-27.8,2c-0.5,0-1-0.4-1.1-0.9c-0.1-0.1-0.1-0.1-0.1-0.1L73.2,9.5c0-0.5,0.4-1,0.9-1.1c0.2,0,0.3,0,0.6,0
+	c0.2,0,0.4,0,0.6,0c7.6-0.1,14.6,2.8,19.9,7.6C100.4,20.9,103.8,27.6,104.4,35.3z M102.3,34.4c-0.7-6.7-3.9-12.6-8.5-16.9
+	c-4.9-4.5-11.4-7.2-18.5-7.1h0l1.3,25.8L102.3,34.4z M67.5,13.7c-13.7,2-23.8,13.7-23.8,27.6c0,15.4,12.5,27.9,27.9,27.9
+	c4.9,0,9.7-1.3,13.9-3.7L71.5,41.3L67.5,13.7z</Geometry>
+            <Geometry x:Key="data" >M325,164.9c8.3,0.7,16.5,1.3,24.8,2c38.6,3.3,76.6,9.3,113.1,22.9c13.9,5.2,27.2,11.6,38.9,21c10.4,8.4,16.6,18.7,15.6,32.8
+	c-0.6,8.8-0.5,17.7,0,26.5c0.7,12.6-4.6,22.2-13.8,30.1c-12.8,11-27.9,18-43.6,23.7c-29.6,10.7-60.3,16.5-91.4,20
+	c-34.8,4-69.8,5-104.8,3c-47.2-2.7-93.9-8.8-137.9-27.2c-11.7-4.9-22.6-12-33-19.3c-10.2-7.2-15.2-17.7-14.4-30.7c0.6-9,0.5-18,0-27
+	c-0.8-13.1,4.9-22.8,14.5-30.8c11.1-9.3,23.9-15.7,37.3-20.9c28.1-11,57.4-17.1,87.1-20.9c16.7-2.1,33.5-3,50.2-4.4
+	c1.5-0.1,2.9-0.5,4.4-0.7C289.7,164.9,307.3,164.9,325,164.9z M324,676.9c1.3-0.2,2.6-0.6,3.9-0.7c13.9-1.1,27.9-1.8,41.8-3.3
+	c31.8-3.6,63.2-9.6,93.3-20.9c14.5-5.5,28.5-12.1,40.4-22.4c9.4-8,14.7-17.7,14.1-30.5c-0.6-12.1-0.1-24.3-0.1-36.5
+	c0-2.1,0-4.2,0-7.1c-1.8,1.1-2.7,1.8-3.7,2.3c-12.8,6.4-25.1,13.9-38.4,19c-39.6,15.4-81.3,21.6-123.4,24.9
+	c-56.2,4.4-112.2,2.4-167.8-7.8c-36.6-6.7-72-16.5-103.5-37.2c-0.4-0.2-0.9-0.3-2-0.7c0,2.1,0,3.9,0,5.6c0,12.3,0.5,24.7-0.1,37
+	c-0.7,13.7,4.7,24.4,15.4,31.8c10.8,7.4,22.1,14.4,34.1,19.4c37.9,15.7,78.1,21.7,118.7,25.2c8.4,0.7,16.9,1.3,25.3,2
+	C289.3,676.9,306.7,676.9,324,676.9z M78.5,379.5c-0.5,12.6,4,22.9,13.8,30c10,7.3,20.7,14.1,31.9,19.2
+	c32.9,14.7,68,21.1,103.5,24.9c60,6.5,119.8,5.4,179.2-5.8c26.7-5,53.1-11.7,77.1-24.9c8.8-4.8,16.8-11.4,24.4-17.9
+	c5.2-4.5,8.6-10.8,8.7-18c0.3-16.5,0.1-33,0.1-49.5c0-0.2-0.4-0.4,0.3,0.3c-15.7,7.2-30.5,15.3-46.1,21
+	c-47.8,17.4-97.7,23.2-148.1,25.1c-37.4,1.4-74.6,0.1-111.7-5c-30.7-4.2-61.2-9.8-90.2-21.2c-14.4-5.7-28.2-13.2-42.7-20
+	C78.6,351.2,79.1,365.4,78.5,379.5z M513.6,448c-12.6,6.4-24.8,13.8-37.9,18.8c-43.3,16.8-88.8,22.9-134.8,25.9
+	c-47.2,3-94.2,1.4-141-5.8c-30.8-4.8-61.2-11.3-89.9-24.1c-10.6-4.7-20.6-10.6-31.2-16.1c-0.1,1.4-0.2,3-0.2,4.6
+	c0,12.3,0.5,24.7-0.2,37c-0.8,14.3,4.9,25.3,16.1,32.9c10.4,7.1,21.3,13.7,32.9,18.5c40.9,16.9,84.2,23.1,128.1,26
+	c39,2.6,77.9,1.8,116.7-2.9c30.3-3.7,60.2-9.4,88.9-20c16.5-6.1,32.3-13.4,45.2-25.8c7.4-7.1,11.4-15.6,11.1-26.3
+	c-0.4-13.2-0.1-26.3-0.1-39.5c0-1.6-0.2-3.2-0.3-5.4C515.5,446.9,514.6,447.5,513.6,448z</Geometry>
+            <Geometry x:Key="settings" >M55.8,35.5v-6.8L50,26.8c-0.3-1.3-0.9-2.5-1.5-3.7l2.8-5.5l-4.8-4.8L41,15.6c-1.2-0.6-2.4-1.1-3.7-1.5l-1.9-5.8h-6.8
+	l-1.9,5.8c-1.3,0.3-2.5,0.9-3.7,1.5l-5.5-2.8l-4.8,4.8l2.8,5.5c-0.6,1.2-1.1,2.4-1.5,3.7l-5.8,1.9v6.8l5.8,1.9
+	c0.3,1.3,0.9,2.5,1.5,3.7l-2.8,5.5l4.8,4.8l5.5-2.8c1.2,0.6,2.4,1.1,3.7,1.5l1.9,5.8h6.8l1.9-5.8c1.3-0.3,2.5-0.9,3.7-1.5l5.5,2.8
+	l4.8-4.8l-2.8-5.5c0.6-1.2,1.1-2.4,1.5-3.7L55.8,35.5z M40.9,32c0,4.9-4,8.9-8.9,8.9s-8.9-4-8.9-8.9c0-4.9,4-8.9,8.9-8.9
+	S40.9,27.1,40.9,32z</Geometry>
+            <Geometry x:Key="fileDownloadImport" >M324.87 279.77c32.01 0 61.01 13.01 82.03 34.02 21.09 21 34.1 50.05 34.1 82.1 0 32.06-13.01 61.11-34.02 82.11l-1.32 1.22c-20.92 20.29-49.41 32.8-80.79 32.8-32.06 0-61.1-13.01-82.1-34.02-21.01-21-34.02-50.05-34.02-82.11s13.01-61.1 34.02-82.1c21-21.01 50.04-34.02 82.1-34.02zM243.11 38.08v54.18c.99 12.93 5.5 23.09 13.42 29.85 8.2 7.01 20.46 10.94 36.69 11.23l37.92-.04-88.03-95.22zm91.21 120.49-41.3-.04c-22.49-.35-40.21-6.4-52.9-17.24-13.23-11.31-20.68-27.35-22.19-47.23l-.11-1.74V25.29H62.87c-10.34 0-19.75 4.23-26.55 11.03-6.8 6.8-11.03 16.21-11.03 26.55v336.49c0 10.3 4.25 19.71 11.06 26.52 6.8 6.8 16.22 11.05 26.52 11.05h119.41c2.54 8.79 5.87 17.25 9.92 25.29H62.87c-17.28 0-33.02-7.08-44.41-18.46C7.08 432.37 0 416.64 0 399.36V62.87c0-17.26 7.08-32.98 18.45-44.36C29.89 7.08 45.61 0 62.87 0h173.88c4.11 0 7.76 1.96 10.07 5l109.39 118.34c2.24 2.43 3.34 5.49 3.34 8.55l.03 119.72c-8.18-1.97-16.62-3.25-25.26-3.79v-89.25zm-229.76 54.49c-6.98 0-12.64-5.66-12.64-12.64 0-6.99 5.66-12.65 12.64-12.65h150.49c6.98 0 12.65 5.66 12.65 12.65 0 6.98-5.67 12.64-12.65 12.64H104.56zm0 72.3c-6.98 0-12.64-5.66-12.64-12.65 0-6.98 5.66-12.64 12.64-12.64h142.52c3.71 0 7.05 1.6 9.37 4.15a149.03 149.03 0 0 0-30.54 21.14H104.56zm0 72.3c-6.98 0-12.64-5.66-12.64-12.65 0-6.98 5.66-12.64 12.64-12.64h86.2c-3.82 8.05-6.95 16.51-9.29 25.29h-76.91zm264.81 31.11c3.56.15 6.09 1.33 7.54 3.55 3.98 5.94-1.44 11.81-5.19 15.94l-40.04 40.71c-4.32 4.26-9.32 4.31-13.64 0l-41.01-41.82c-3.51-3.95-7.86-9.36-4.19-14.83 1.49-2.22 4-3.4 7.56-3.55h19.74v-32.45c0-5.82 4.81-10.69 10.7-10.69h28.06c5.9 0 10.71 4.8 10.71 10.69v32.45h19.76z</Geometry>
+            <Geometry x:Key="fileUploadExport" >M324.87 279.77c32.01 0 61.01 13.01 82.03 34.02 21.09 21 34.1 50.05 34.1 82.1 0 32.06-13.01 61.11-34.02 82.11l-1.32 1.22c-20.92 20.29-49.41 32.8-80.79 32.8-32.06 0-61.1-13.01-82.1-34.02-21.01-21-34.02-50.05-34.02-82.11s13.01-61.1 34.02-82.1c21-21.01 50.04-34.02 82.1-34.02zM243.11 38.08v54.18c.99 12.93 5.5 23.09 13.42 29.85 8.2 7.01 20.46 10.94 36.69 11.23l37.92-.04-88.03-95.22zm91.21 120.49-41.3-.04c-22.49-.35-40.21-6.4-52.9-17.24-13.23-11.31-20.68-27.35-22.19-47.23l-.11-1.74V25.29H62.87c-10.34 0-19.75 4.23-26.55 11.03-6.8 6.8-11.03 16.21-11.03 26.55v336.49c0 10.3 4.25 19.71 11.06 26.52 6.8 6.8 16.22 11.05 26.52 11.05h119.41c2.54 8.79 5.87 17.25 9.92 25.29H62.87c-17.28 0-33.02-7.08-44.41-18.46C7.08 432.37 0 416.64 0 399.36V62.87c0-17.26 7.08-32.98 18.45-44.36C29.89 7.08 45.61 0 62.87 0h173.88c4.11 0 7.76 1.96 10.07 5l109.39 118.34c2.24 2.43 3.34 5.49 3.34 8.55l.03 119.72c-8.18-1.97-16.62-3.25-25.26-3.79v-89.25zm-229.76 54.49c-6.98 0-12.64-5.66-12.64-12.64 0-6.99 5.66-12.65 12.64-12.65h150.49c6.98 0 12.65 5.66 12.65 12.65 0 6.98-5.67 12.64-12.65 12.64H104.56zm0 72.3c-6.98 0-12.64-5.66-12.64-12.65 0-6.98 5.66-12.64 12.64-12.64h142.52c3.71 0 7.05 1.6 9.37 4.15a149.03 149.03 0 0 0-30.54 21.14H104.56zm0 72.3c-6.98 0-12.64-5.66-12.64-12.65 0-6.98 5.66-12.64 12.64-12.64h86.2c-3.82 8.05-6.95 16.51-9.29 25.29h-76.91zm264.81 47.03c3.56-.14 6.09-1.33 7.54-3.55 3.98-5.94-1.44-11.81-5.19-15.94l-40.04-40.71c-4.32-4.26-9.32-4.31-13.64 0l-41.01 41.82c-3.51 3.96-7.86 9.36-4.19 14.83 1.49 2.22 4 3.41 7.56 3.55h19.74v30.69c0 5.84 4.81 10.69 10.7 10.69h28.06c5.9 0 10.71-4.81 10.71-10.69v-30.69h19.76z</Geometry>
+
+
+            <Geometry x:Key="passportTicket" >M46.4,51.8h5.5l0,0l0,0c0.1,0,0.1,0,0.2,0c0.4-0.7,0.7-1.4,1-2.1l0,0c0.5-1.1,0.8-2.3,1.1-3.5c0.2-0.9,0.3-1.9,0.3-2.8H49
+	C48.9,46.2,48,49,46.4,51.8z M45.3,53.6c-1.7,2.5-4,4.9-6.9,7.4c0.4-0.1,0.9-0.1,1.3-0.2c1.2-0.2,2.4-0.6,3.5-1.1s2.2-1.1,3.2-1.7
+	c1-0.7,1.9-1.4,2.7-2.3c0.7-0.6,1.3-1.3,1.8-2.1l0,0C50.9,53.6,45.3,53.6,45.3,53.6z M33.6,60.9L33.6,60.9L33.6,60.9L33.6,60.9z
+	 M26.7,53.6H21c0.5,0.7,1.1,1.4,1.8,2.1c0.8,0.8,1.8,1.6,2.7,2.3c1,0.7,2,1.2,3.2,1.7l0,0c1.1,0.5,2.3,0.8,3.5,1.1
+	c0.4,0.1,0.9,0.2,1.3,0.2C30.7,58.5,28.4,56,26.7,53.6z M23,43.4h-5.6c0,1,0.2,1.9,0.3,2.8c0.2,1.2,0.6,2.4,1.1,3.5
+	c0.3,0.7,0.6,1.4,1,2.1h5.7C24,49,23.1,46.2,23,43.4z M25.8,33.1h-6c-0.4,0.7-0.7,1.4-1,2.1l0,0c-0.5,1.1-0.8,2.3-1.1,3.5
+	c-0.2,0.9-0.3,1.9-0.3,2.8H23C23.2,38.8,24.2,36,25.8,33.1z M27,31.3c1.7-2.5,3.9-4.9,6.7-7.4c-0.5,0.1-1,0.1-1.5,0.2
+	c-1.2,0.2-2.4,0.6-3.5,1.1s-2.2,1.1-3.2,1.7c-1,0.7-1.9,1.4-2.7,2.3c-0.6,0.7-1.3,1.3-1.8,2.1l0,0C21,31.3,27,31.3,27,31.3z
+	 M45,31.3h6c-0.5-0.7-1.1-1.4-1.8-2.1c-0.8-0.8-1.8-1.6-2.7-2.3c-1-0.7-2-1.2-3.2-1.7l0,0c-1.1-0.5-2.3-0.8-3.5-1.1
+	c-0.5-0.1-1-0.2-1.4-0.2C41.1,26.5,43.3,28.9,45,31.3z M38.3,24L38.3,24L38.3,24L38.3,24L38.3,24z M48.9,41.6h5.6
+	c0-1-0.2-1.9-0.3-2.9c-0.2-1.2-0.6-2.4-1.1-3.5c-0.3-0.7-0.6-1.4-1-2.1h-6C47.8,36,48.7,38.8,48.9,41.6z M36.9,25.1v6.2h5.9
+	C41.3,29.3,39.3,27.2,36.9,25.1z M44,33.1h-7.2v8.4h10.3C46.9,38.8,45.9,36,44,33.1z M47.2,43.3H36.9v8.4h7.5
+	C46.1,49,47.1,46.2,47.2,43.3z M43.1,53.6h-6.2v6.3C39.4,57.8,41.5,55.7,43.1,53.6z M35.1,59.9v-6.3h-6.2
+	C30.5,55.7,32.5,57.8,35.1,59.9z M27.6,51.8h7.5v-8.4H24.8C24.9,46.2,25.8,49,27.6,51.8z M24.8,41.6h10.3v-8.4h-7.2
+	C26.1,36,25,38.8,24.8,41.6z M29.2,31.3h5.9v-6.2C32.7,27.2,30.7,29.3,29.2,31.3z M73.7,36.6v11.1c0.3,0,0.6,0.1,0.9,0.2l1.7-1.7
+	l1.6,1.6l-0.7,0.7l1.9,0.5l2-2l1.6,1.6l-0.9,1l2.4,0.6l4.1-4.1c0.6-0.6,1.7-0.4,2.4,0.3c0.8,0.8,0.9,1.9,0.3,2.4l-4,4l0.6,2.4
+	l0.9-0.9l1.6,1.6l-1.9,1.9l0.4,1.9l0.7-0.7l1.6,1.6l-1.7,1.7l0,0c0.8,3.6,0.1,2.5-2.7,5.3l-4-10.4l-4,4c0.3,1.9,0.4,3.5-1.1,5
+	l-1.7-1.6c-0.1-0.8-0.2-1.4-0.3-1.8c-0.3-0.1-0.5-0.3-0.7-0.5s-0.3-0.4-0.5-0.6c-0.2,0-0.4,0-0.6-0.1v17l5.8,5.8l32.7-32.7
+	L85.4,24.9L73.7,36.6z M79.8,54.5l-6-2.3v6c0.6,0,1.3,0.1,2.1,0.3L79.8,54.5z M73.7,90l4.3-4.2l-4.3-4.2V90z M122.5,39.4L116,33
+	c-5.5,2.6-12-0.8-12.8-7c-0.2-1.7,0.1-3.4,0.8-5l-6.5-6.5c-0.3-0.3-0.6-0.4-1-0.4s-0.7,0.1-0.9,0.4l-8.8,8.8l26.8,26.8l8.8-8.8l0,0
+	c0.3-0.3,0.4-0.6,0.4-1C122.9,40,122.7,39.7,122.5,39.4z M70.2,7.9c-0.2,0-0.3-0.1-0.5-0.1H5.8c-0.5,0-1-0.2-1.4-0.6
+	S3.8,6.3,3.8,5.8s0.2-1,0.6-1.4C4.7,4,5.2,3.8,5.8,3.8h63.9c1,0,1.9-0.8,1.9-1.9c0-1-0.9-1.9-1.9-1.9H5.8c-1.6,0-3,0.6-4.1,1.7
+	C1,2.4,0.5,3.3,0.2,4.3C0.1,4.5,0,4.8,0,5.1V93c0,1.5,0.6,2.8,1.6,3.8s2.3,1.6,3.8,1.6h64.3c1,0,1.9-0.8,1.9-1.9V93V33.4V24V9.7
+	C71.6,8.8,71,8.1,70.2,7.9z M16,38.4c0.3-1.3,0.7-2.6,1.2-3.8c0,0,0,0,0-0.1c0.5-1.2,1.2-2.4,1.9-3.5c0.7-1.1,1.5-2.1,2.5-3
+	c0.9-0.9,1.9-1.8,3-2.5s2.3-1.4,3.5-1.9c1.3-0.5,2.5-0.9,3.9-1.2c1.3-0.3,2.7-0.4,4.1-0.4c1.4,0,2.8,0.1,4.1,0.4s2.6,0.7,3.8,1.2
+	l0,0c1.2,0.5,2.4,1.2,3.5,1.9c1.1,0.7,2.1,1.6,3,2.5s1.8,1.9,2.5,3c0.7,1.1,1.4,2.3,1.9,3.5c0.5,1.3,0.9,2.5,1.2,3.9
+	c0.3,1.3,0.4,2.7,0.4,4.1c0,1.4-0.1,2.8-0.4,4.1c-0.3,1.3-0.7,2.6-1.2,3.8l0,0c-0.5,1.2-1.2,2.4-1.9,3.5s-1.6,2.1-2.5,3
+	s-1.9,1.8-3,2.5s-2.3,1.4-3.5,1.9c-1.3,0.5-2.5,0.9-3.9,1.2c-1.3,0.3-2.7,0.4-4.1,0.4c-1.4,0-2.8-0.1-4.1-0.4
+	c-1.3-0.3-2.6-0.7-3.8-1.2l0,0c-1.2-0.5-2.4-1.2-3.5-1.9s-2.1-1.6-3-2.5s-1.8-1.9-2.5-3s-1.4-2.3-1.9-3.5c-0.5-1.3-0.9-2.5-1.2-3.9
+	c-0.3-1.3-0.4-2.7-0.4-4.1C15.6,41,15.7,39.7,16,38.4z M48.9,85.6H22.6c-1,0-1.9-0.9-1.9-1.9s0.8-1.9,1.9-1.9h26.3
+	c1,0,1.9,0.9,1.9,1.9S50,85.6,48.9,85.6z M56.6,75.7H14.9c-1,0-1.9-0.8-1.9-1.9c0-1,0.8-1.9,1.9-1.9h41.7c1,0,1.9,0.8,1.9,1.9
+	C58.5,74.9,57.7,75.7,56.6,75.7z</Geometry>
+            <Geometry x:Key="addFile" >M360.6,155.3c-6.3-1.1-12.5-2.2-18.8-3.3c-0.1-0.1-0.4-0.4-0.4-0.7c-1-8.7-1-8.7-10-8.7c-37.2,0-74.4,0-111.5,0
+	c-1.5,0-2.9,0.1-4.7,0.2c0,7,0,13.8,0,21.4c29,0,58,0,87.1,0c-5.3,6.6-10,12.8-15.1,18.6c-1,1.2-3.5,1.6-5.3,1.6
+	c-20.5,0.1-41,0.1-61.5,0.1c-1.6,0-3.2,0-5.2,0c0,7.2,0,14,0,21.4c21.1,0,42.2,0,63.2,0c0.7,7.5,0.6,14.6,2.1,21.3
+	c1.4,6.6,4.3,12.8,6.8,19.8c-1.2,0.1-2.7,0.3-4.3,0.3c-21.5,0-43,0.1-64.5,0c-15.9,0-23.8-7.7-23.9-23.6
+	c-0.1-53.7-0.2-107.3-0.1-161c0-15.6,8.3-23.7,23.8-23.7c25,0,50-0.1,75,0.1c2.9,0,6.6,1.5,8.7,3.5c18.8,18.4,37.4,37.1,55.9,55.8
+	c1.5,1.5,3,3.9,3,5.9c0.2,16.3,0.1,32.7,0.1,49C361,153.9,360.8,154.6,360.6,155.3z M288.2,111.3c18.8,0,37.1,0,55,0
+	c-18.3-18.4-36.6-36.7-55-55.1C288.2,74.5,288.2,92.9,288.2,111.3z M340.6,165.8c26.6,0,48.4,21.9,48.3,48.4
+	c-0.1,26.5-22,48.3-48.5,48.2c-26.7-0.1-48.2-21.7-48.2-48.4C292.3,187.2,313.7,165.8,340.6,165.8z M348.4,221.8
+	c7.1,0,13.3,0,19.6,0c0-5.7,0-10.9,0-16.5c-6.4,0-12.3,0-18.9,0c0-6.8,0-13.2,0-19.6c-6.1,0-11.5,0-17.3,0c0,6.7,0,12.9,0,19.8
+	c-6.8,0-13.2,0-19.8,0c0,5.7,0,10.8,0,16.5c6.7,0,13.1,0,20.1,0c0,7,0,13.4,0,19.7c5.7,0,10.8,0,16.3,0
+	C348.4,235.1,348.4,228.8,348.4,221.8z</Geometry>
+            <Geometry x:Key="pdfFiles" >M25.38,57h64.88V37.34H69.59c-2.17,0-5.19-1.17-6.62-2.6c-1.43-1.43-2.3-4.01-2.3-6.17V7.64l0,0H8.15 c-0.18,0-0.32,0.09-0.41,0.18C7.59,7.92,7.55,8.05,7.55,8.24v106.45c0,0.14,0.09,0.32,0.18,0.41c0.09,0.14,0.28,0.18,0.41,0.18 c22.78,0,58.09,0,81.51,0c0.18,0,0.17-0.09,0.27-0.18c0.14-0.09,0.33-0.28,0.33-0.41v-11.16H25.38c-4.14,0-7.56-3.4-7.56-7.56 V64.55C17.82,60.4,21.22,57,25.38,57L25.38,57z M29.5,67.4h13.19c2.87,0,5.02,0.68,6.46,2.05c1.43,1.37,2.14,3.31,2.14,5.84 c0,2.59-0.78,4.62-2.34,6.08c-1.56,1.46-3.94,2.19-7.14,2.19h-4.35v9.49H29.5V67.4L29.5,67.4z M37.45,78.37h1.95 c1.54,0,2.62-0.27,3.24-0.8c0.62-0.53,0.93-1.21,0.93-2.04c0-0.81-0.27-1.49-0.81-2.05c-0.54-0.56-1.55-0.84-3.05-0.84h-2.27V78.37 L37.45,78.37z M54.99,67.4h11.78c2.32,0,4.2,0.32,5.63,0.94c1.43,0.63,2.61,1.53,3.55,2.71c0.93,1.18,1.61,2.55,2.02,4.11 c0.42,1.56,0.63,3.22,0.63,4.97c0,2.74-0.31,4.87-0.94,6.38c-0.62,1.51-1.49,2.78-2.6,3.8c-1.11,1.02-2.3,1.7-3.57,2.04 c-1.74,0.47-3.31,0.7-4.72,0.7H54.99V67.4L54.99,67.4z M62.9,73.21v14.01h1.95c1.66,0,2.84-0.19,3.55-0.55 c0.7-0.37,1.25-1.01,1.65-1.92c0.4-0.92,0.6-2.4,0.6-4.45c0-2.72-0.44-4.57-1.33-5.58c-0.89-1-2.36-1.5-4.42-1.5H62.9L62.9,73.21z M82.25,67.4h19.6v5.52H90.21v4.48h9.96v5.2h-9.96v10.46h-7.95V67.4L82.25,67.4z M97.79,57h9.93c4.16,0,7.56,3.41,7.56,7.56v31.42 c0,4.15-3.41,7.56-7.56,7.56h-9.93v13.55c0,1.61-0.65,3.04-1.7,4.1c-1.06,1.06-2.49,1.7-4.1,1.7c-29.44,0-56.59,0-86.18,0 c-1.61,0-3.04-0.64-4.1-1.7c-1.06-1.06-1.7-2.49-1.7-4.1V5.85c0-1.61,0.65-3.04,1.7-4.1c1.06-1.06,2.53-1.7,4.1-1.7h58.72 C64.66,0,64.8,0,64.94,0c0.64,0,1.29,0.28,1.75,0.69h0.09c0.09,0.05,0.14,0.09,0.23,0.18l29.99,30.36c0.51,0.51,0.88,1.2,0.88,1.98 c0,0.23-0.05,0.41-0.09,0.65V57L97.79,57z M67.52,27.97V8.94l21.43,21.7H70.19c-0.74,0-1.38-0.32-1.89-0.78 C67.84,29.4,67.52,28.71,67.52,27.97L67.52,27.97z</Geometry>
+            <Geometry x:Key="printer" >M18.46,89.86H7.82A7.8,7.8,0,0,1,2.3,87.57l-.24-.26A7.82,7.82,0,0,1,0,82V35.44a7.81,7.81,0,0,1,2.3-5.53l.25-.23a7.77,7.77,0,0,1,5.27-2.06H20.13A8.07,8.07,0,0,1,20,26.14v-18a8.05,8.05,0,0,1,2.39-5.72h0A8.07,8.07,0,0,1,28.1,0H94.78a8.13,8.13,0,0,1,8.11,8.11v18a8.07,8.07,0,0,1-.14,1.48h12.31a7.81,7.81,0,0,1,5.51,2.29h0a7.8,7.8,0,0,1,2.3,5.52V82a7.84,7.84,0,0,1-7.82,7.82H104.42v20.31a4.63,4.63,0,0,1-1.36,3.28,4.32,4.32,0,0,1-.39.34,4.6,4.6,0,0,1-2.89,1H23.1a4.63,4.63,0,0,1-3.28-1.36,3.06,3.06,0,0,1-.34-.39,4.6,4.6,0,0,1-1-2.89V89.86ZM27,27.62H95.91l.19-.17a1.86,1.86,0,0,0,.55-1.31v-18a1.88,1.88,0,0,0-1.87-1.87H28.1a1.87,1.87,0,0,0-1.32.55h0a1.87,1.87,0,0,0-.54,1.32v18a1.84,1.84,0,0,0,.55,1.31l.19.17Zm9.3,71.71a2.4,2.4,0,0,1,0-4.8H63.64a2.4,2.4,0,0,1,0,4.8Zm0-14.56a2.4,2.4,0,0,1,0-4.8H86.61a2.4,2.4,0,0,1,0,4.8ZM7.07,60.61H115.81V35.44a.76.76,0,0,0-.22-.54.77.77,0,0,0-.53-.22H7.82a.76.76,0,0,0-.46.16l-.07.07a.76.76,0,0,0-.22.53V60.61Zm108.74,7.07H102.19a4.13,4.13,0,0,1,.87.69,4.63,4.63,0,0,1,1.36,3.28V82.79h10.64a.75.75,0,0,0,.53-.22.79.79,0,0,0,.22-.53V67.68Zm-95.12,0H7.07V82a.81.81,0,0,0,.15.46l.07.07a.75.75,0,0,0,.53.22H18.46V71.65a4.63,4.63,0,0,1,1.36-3.28,4.13,4.13,0,0,1,.87-.69Zm76.67,4.23H25.52v35.83H97.36V71.91Z</Geometry>
+            <Geometry x:Key="searchFile" >M56.75,113.57V75.07a9.34,9.34,0,0,1,9.31-9.3h36.5a9.34,9.34,0,0,1,9.31,9.3v38.5a9.34,9.34,0,0,1-9.31,9.31H66.06a9.34,9.34,0,0,1-9.31-9.31Zm2.74-102.1L79.08,29.82H59.49V11.47ZM20.72,69.38a2.12,2.12,0,0,0-2,2.21,2.08,2.08,0,0,0,2,2.21H45.3V69.38Zm0,15.83a2.12,2.12,0,0,0-2,2.21,2.08,2.08,0,0,0,2,2.21H45.3V85.21Zm0-47.5a2.12,2.12,0,0,0-2,2.21,2.09,2.09,0,0,0,2,2.21H43.45a2.13,2.13,0,0,0,2-2.2,2.1,2.1,0,0,0-2-2.22Zm0-15.83a2.12,2.12,0,0,0-2,2.21,2.08,2.08,0,0,0,2,2.21h12.5a2.12,2.12,0,0,0,2-2.21,2.1,2.1,0,0,0-2-2.21Zm0,31.67a2.12,2.12,0,0,0-2,2.21,2.1,2.1,0,0,0,2,2.21H59.16a2.13,2.13,0,0,0,2-2.21,2.09,2.09,0,0,0-2-2.21ZM90,32.45a3.26,3.26,0,0,0-2.37-3.14L58.74,1.2A3.21,3.21,0,0,0,56.23,0H5.87A5.86,5.86,0,0,0,0,5.86V106.25a5.84,5.84,0,0,0,1.72,4.15,5.91,5.91,0,0,0,4.15,1.71H45.39v-6.55H6.55v-99H52.94V33.08a3.29,3.29,0,0,0,3.29,3.29h27.2V57.82H90V32.45Zm-7.5,45.29a14.6,14.6,0,0,1,14.6,14.61,14.8,14.8,0,0,1-.6,4.17,14.57,14.57,0,0,1-1.35,3.11l5.33,5.8a1.07,1.07,0,0,1-.06,1.49l-4.05,3.7a1.06,1.06,0,0,1-1.49-.07L89.79,105a14.09,14.09,0,0,1-3.08,1.34h0a14.6,14.6,0,0,1-18.79-14,14.59,14.59,0,0,1,14.6-14.61Zm6.45,8.16a9.19,9.19,0,0,0-3-2l0,0a9.13,9.13,0,0,0-12.56,8.46A9.26,9.26,0,0,0,74,95.83a9.13,9.13,0,0,0,16.88-7l0,0a9.19,9.19,0,0,0-2-2.91Z</Geometry>
+            <Geometry x:Key="permissions" >M17,10H9V6.8569336C9,5.2817383,10.3457031,4,12,4s3,1.2817383,3,2.8569336V7h2V6.8569336C17,4.1787109,14.7568359,2,12,2  S7,4.1787109,7,6.8569336V10c-1.1045532,0-2,0.8953857-2,2v8c0,1.1045532,0.8954468,2,2,2h10c1.1045532,0,2-0.8954468,2-2v-8  C19,10.8953857,18.1045532,10,17,10z M12,18c-1.1045532,0-2-0.8954468-2-2c0-1.1046143,0.8954468-2,2-2s2,0.8953857,2,2  C14,17.1045532,13.1045532,18,12,18z</Geometry>
+            <Geometry x:Key="passcode" >M33.77 310.73h406.46c18.57 0 33.77 15.25 33.77 33.77v134.25c0 18.52-15.25 33.77-33.77 33.77H33.77C15.25 512.52 0 497.32 0 478.75V344.5c0-18.57 15.2-33.77 33.77-33.77zm103.7-203.95h11V91.77c0-25.1 9.89-47.99 25.83-64.6C190.37 10.41 212.56 0 237 0c24.44 0 46.65 10.4 62.71 27.17 15.95 16.61 25.84 39.48 25.84 64.6v15.01h10.99c7.95 0 14.45 6.51 14.45 14.46v142.85c0 7.94-6.5 14.44-14.45 14.44H137.47c-7.96 0-14.44-6.5-14.44-14.44V121.24c-.02-7.95 6.48-14.46 14.44-14.46zm88.08 92.38-15.04 39.39h52.97l-13.93-39.95c8.84-4.54 14.89-13.75 14.89-24.39 0-15.16-12.28-27.43-27.45-27.43-15.15 0-27.43 12.27-27.43 27.43 0 11.07 6.55 20.6 15.99 24.95zm-49.74-92.38h122.38V91.77c0-17.85-6.96-34.02-18.15-45.7-11.07-11.54-26.3-18.72-43.04-18.72-16.73 0-31.98 7.18-43.04 18.72-11.2 11.68-18.15 27.85-18.15 45.7v15.01zm179.41 269.65c0-6.15 4.98-11.14 11.14-11.14 6.15 0 11.13 4.99 11.13 11.14v14.4l11.95-7.99c5.09-3.4 11.99-2.05 15.4 3.05 3.42 5.09 2.05 11.99-3.04 15.4l-15.42 10.3 15.43 10.26c5.11 3.38 6.52 10.29 3.13 15.4-3.38 5.12-10.29 6.51-15.4 3.13l-12.05-8v14.45c0 6.15-4.98 11.14-11.13 11.14-6.16 0-11.14-4.99-11.14-11.14v-14.4l-11.94 7.99c-5.1 3.4-11.99 2.04-15.41-3.05-3.41-5.09-2.05-11.99 3.05-15.41l15.41-10.3-15.42-10.25c-5.12-3.38-6.52-10.29-3.13-15.4 3.38-5.12 10.28-6.52 15.39-3.14l12.05 8.01v-14.45zm-258.71 0c0-6.15 4.98-11.14 11.13-11.14s11.14 4.99 11.14 11.14v14.4l11.94-7.99c5.1-3.4 11.99-2.05 15.41 3.05 3.41 5.09 2.05 11.99-3.05 15.4l-15.41 10.3 15.43 10.26c5.11 3.38 6.51 10.29 3.12 15.4-3.38 5.12-10.28 6.51-15.4 3.13l-12.04-8v14.45c0 6.15-4.99 11.14-11.14 11.14s-11.13-4.99-11.13-11.14v-14.4l-11.95 7.99c-5.09 3.4-11.99 2.04-15.4-3.05-3.42-5.09-2.05-11.99 3.05-15.41l15.41-10.3-15.43-10.25c-5.11-3.38-6.51-10.29-3.12-15.4 3.38-5.12 10.28-6.52 15.39-3.14l12.05 8.01v-14.45zm129.35 0c0-6.15 4.99-11.14 11.14-11.14s11.14 4.99 11.14 11.14v14.4l11.94-7.99c5.09-3.4 11.99-2.05 15.41 3.05 3.41 5.09 2.04 11.99-3.05 15.4l-15.41 10.3 15.42 10.26c5.12 3.38 6.52 10.29 3.13 15.4-3.38 5.12-10.29 6.51-15.4 3.13l-12.04-8v14.45c0 6.15-4.99 11.14-11.14 11.14s-11.14-4.99-11.14-11.14v-14.4l-11.94 7.99c-5.09 3.4-11.99 2.04-15.4-3.05-3.42-5.09-2.05-11.99 3.04-15.41l15.42-10.3-15.43-10.25c-5.11-3.38-6.52-10.29-3.13-15.4 3.38-5.12 10.29-6.52 15.4-3.14l12.04 8.01v-14.45z</Geometry>
+            <Geometry x:Key="commissionCompany" >M220.5,210c98.6,0.4,178.2,79.1,177.9,176.1c-0.3,97.1-80.3,175.6-178.7,175.3C121.6,561,41.4,481.5,42,384.9
+	C42.5,288.3,122.9,209.6,220.5,210z M138.3,506.2c5-4.2,9.7-7.1,12.9-11.1c39.9-50.6,79.5-101.3,119.3-152
+	c13.3-17,26.7-34.1,40-51.1c3.3-4.2,5.8-9.2,2.5-13.9c-2.3-3.4-6.4-6.6-10.3-7.6c-5.7-1.5-9.6,2.8-13,7.2
+	c-44.8,57.4-89.8,114.7-134.7,172c-8.7,11.2-17.9,22-25.9,33.7c-2.3,3.3-2.8,9.4-1.5,13.2C128.7,500.1,133.6,502.3,138.3,506.2z
+	 M201.8,319.5c-0.1-27.1-22.7-49.6-49.8-49.3c-26.9,0.2-49,22.3-49.2,49.3c-0.2,27,22.4,49.7,49.4,49.7
+	C179.4,369.2,201.8,346.6,201.8,319.5z M277.2,512.3c27.3,0.1,49.7-22.1,49.8-49.3c0.1-27.2-22.3-49.5-49.6-49.4
+	c-27.1,0.1-49.1,21.9-49.4,48.8C227.8,489.6,250,512.2,277.2,512.3z M482.6,359.1c-5.1,0.8-9.6-0.2-10.6-5.9c-1-5.7,2.8-8,8-8.8
+	c7.4-1.1,14.7-2.3,22-4c16.9-3.8,33.7-8.3,47.8-19.1c4.1-3.1,8.7-8.2,9.4-12.9c1.4-10.5,0.4-21.4,0.4-32.6c-6.8,3.5-12.7,7-19,9.8
+	c-20.2,8.9-41.6,13.4-63.4,15.7c-14.3,1.5-28.7,2.1-43.1,2.8c-4.9,0.2-8.6-2.2-8.5-7.6c0-5.1,3.5-7,8.2-7.1c2.4-0.1,4.8,0,7.2-0.3
+	c19.8-2.1,39.9-3,59.3-6.9c15.3-3.1,30.2-9.2,44.5-15.7c5.9-2.7,12.8-9.2,14-15.1c2.3-10.6,0.6-22.1,0.6-31.9
+	c-13.8,5.4-27.1,11.7-41,15.6c-39.8,11.4-80.5,13.1-121.5,9.2c-12.2-1.2-24.2-3.4-36.3-5.4c-4.5-0.8-7.7-3.6-6.9-8.5
+	c0.9-5.1,4.6-7,9.7-5.9c1.4,0.3,2.8,0.5,4.3,0.7c45.9,8.7,91.9,8.8,137.3-2c15-3.5,29.3-10.3,43.3-17c4.8-2.3,9.9-8.4,10.7-13.4
+	c1.6-10.7,0.5-21.7,0.5-33.1c-39.9,23.6-83.2,28.2-127.2,28.2c-43.9,0-87.1-4.9-126.6-28.2c0,16.2,0.2,31.6-0.1,46.9
+	c-0.1,5.6,1.3,8.7,6.7,11.6c77,41.3,115.9,127.5,95.6,211.6c-2.6,10.6-6.4,20.8-9.8,31.8c37.1,3.2,73.5,2.4,109.2-7
+	c13.8-3.6,27.1-9.5,40-15.7c4.9-2.4,10.7-8,11.4-12.9c1.7-11.1,0.5-22.6,0.5-33.1c-11.3,4.8-21.9,11-33.3,13.8
+	c-20.4,5-41.4,8.1-62.1,11.9c-5.2,1-9.9,0.5-11.1-5.9c-0.9-5.1,2.6-7.9,9.7-8.8c13.6-1.8,27.4-2.6,40.5-6.2
+	c15.3-4.3,30.2-10.6,44.8-17.1c6.2-2.8,11.7-8,11.9-16c0.2-10.1,0.1-20.1,0.1-31.5C535.4,349.2,509.2,354.9,482.6,359.1z M5.5,149.4
+	c-2.4,16.4,6,25.8,19.7,32.1c3.7,1.7,7.3,3.9,11.2,4.8C55,190.8,73.7,195,92.5,199c5,1.1,8.3,3.2,7.7,8.4c-0.6,4.9-4.1,6.8-8.9,6.3
+	c-27.3-3.2-54.1-8.4-78.4-22.3c-2.2-1.2-4.2-2.6-7.2-4.4c0,9.8,0.5,18.2-0.1,26.5c-0.7,9.4,3.4,15.7,10.7,20.5c4,2.6,8.2,5.2,12.5,7
+	c7.3,3.1,15,5.2,22.1,8.7c2.4,1.2,5.2,6.4,4.4,8.1c-1.2,2.6-5.4,4.2-8.6,5.4c-1.4,0.5-3.7-0.7-5.5-1.5c-11.8-4.9-23.6-9.9-35.6-14.9
+	c0,7.3,0.7,15-0.2,22.6c-1.3,11.8,4.4,19.2,13.7,24.7c2.7,1.6,5.5,3,8.2,4.5c4.3,2.4,7,5.6,4.3,10.5c-2.6,4.7-6.6,5-11.1,2.6
+	c-4.8-2.6-9.5-5.2-15-8.2c0,11.6,0,22.4,0,33.1c0,1.9-0.1,3.9,0.1,5.8c1.1,10,12.1,22.5,22.2,25.1c6.7-56.1,32.4-101.6,78.1-134.9
+	c45.8-33.4,97.4-43.5,153.1-33.6c0-41,0-81.4,0-122.4c-39.5,23.6-82.9,28.1-126.8,28.1c-43.9,0-87.2-4.7-126.7-28.3
+	c0,7.6,0.4,14.3-0.1,21c-0.5,7.8,2.4,14,8.8,17.8c9.2,5.4,18.6,11.2,28.7,14.6c49.3,16.3,99.6,16.5,150.3,8.2
+	c5.4-0.9,10-0.6,11.2,5.5c1.3,6.4-3.4,8.4-8.6,9.1c-65.1,9.4-129.2,9.3-190.4-22.2C5.7,137,6.4,143.3,5.5,149.4z M216.1,79.2
+	c11.8-3.7,23.4-8.9,33.8-15.4c12.9-8,12.8-17.8,1.1-27.1c-5.2-4.1-11.1-7.7-17.1-10.5c-25.7-11.8-53.1-16.4-81-18.2
+	c-36.8-2.3-73.1,0.5-108,12.9C33,25.2,21.6,32.1,11.3,39.7C2.9,45.8,3.6,54.3,11.7,61c5.5,4.5,11.7,8.5,18.3,11.3
+	c32.6,14.1,67.2,17.3,89.9,17.6C160.6,90.1,188.9,87.7,216.1,79.2z M433.2,175.4c24.5-3.1,49.2-5,73.3-9.8
+	c14.5-2.9,29-8.9,41.9-16.2c15.4-8.7,15.1-22.1,0.3-31.7c-8.1-5.3-17.3-9.6-26.7-12.2c-58.4-16.2-117.3-16.2-175.8-0.8
+	c-12,3.1-23.5,9.7-33.8,16.7c-9.7,6.6-9.5,17.2-0.2,24.3c7.9,6,17,11,26.3,14.3c30.5,10.8,62.3,13.3,94.4,13.5
+	C433.1,174.1,433.2,174.7,433.2,175.4z M128.2,320.2c0.2,13.2,10.7,23.6,24.1,23.6c13.6,0,24.2-10.7,24.1-24.2
+	c-0.1-13.6-10.8-24-24.5-23.9C138.4,295.7,128,306.5,128.2,320.2z M277.5,438.7c-13.5,0-24.1,10.9-24.1,24.4
+	c0.1,13.2,10.6,23.9,23.7,24.1c13.3,0.2,24.4-10.7,24.4-24.1C301.7,449.5,291,438.7,277.5,438.7z</Geometry>
+            <Geometry x:Key="commissionDiscounts" >M26.048,88.286V49.861h17.287c7.326,1.311,14.653,5.288,21.979,9.898H78.74 c6.078,0.363,9.262,6.526,3.352,10.573c-4.705,3.456-10.918,3.258-17.287,2.686c-4.392-0.219-4.579,5.683,0,5.703 c1.594,0.125,3.32-0.249,4.828-0.249c7.941-0.012,14.488-1.53,18.494-7.807l2.01-4.693l19.971-9.897 c9.992-3.289,17.1,7.16,9.732,14.435c-14.467,10.522-29.299,19.181-44.471,26.175c-11.021,6.703-22.044,6.473-33.055,0 L26.048,88.286L26.048,88.286L26.048,88.286z M92.367,27.683c2.059,0,3.707,0.59,4.963,1.759c1.25,1.175,1.881,2.734,1.881,4.683 c0,1.942-0.631,3.507-1.881,4.677c-1.256,1.174-2.904,1.759-4.963,1.759s-3.715-0.585-4.969-1.759 c-1.25-1.176-1.875-2.735-1.875-4.677c0-1.949,0.625-3.508,1.875-4.683C88.652,28.273,90.309,27.683,92.367,27.683L92.367,27.683 L92.367,27.683z M82.797,0c15.758,0,28.533,12.774,28.533,28.533c0,15.758-12.775,28.533-28.533,28.533 S54.264,44.292,54.264,28.533C54.264,12.774,67.039,0,82.797,0L82.797,0z M82.797,5.378c12.787,0,23.154,10.367,23.154,23.155 S95.584,51.688,82.797,51.688c-12.789,0-23.155-10.366-23.155-23.154S70.008,5.378,82.797,5.378L82.797,5.378z M88.166,17.44h5.57 L77.424,39.626h-5.57L88.166,17.44L88.166,17.44L88.166,17.44z M92.367,32.139c-0.602,0-1.064,0.178-1.383,0.517 c-0.316,0.355-0.479,0.834-0.479,1.476c0,0.633,0.162,1.119,0.479,1.467c0.318,0.348,0.781,0.518,1.383,0.518 c0.596,0,1.059-0.177,1.377-0.518c0.316-0.348,0.479-0.834,0.479-1.467c0-0.642-0.164-1.128-0.479-1.476 C93.434,32.309,92.971,32.139,92.367,32.139L92.367,32.139L92.367,32.139z M73.15,20.979c-0.604,0-1.061,0.177-1.377,0.518 c-0.316,0.347-0.479,0.834-0.479,1.467c0,0.634,0.162,1.128,0.479,1.475c0.316,0.34,0.773,0.518,1.377,0.518 c0.602,0,1.064-0.178,1.381-0.518c0.316-0.355,0.471-0.841,0.471-1.475c0-0.633-0.154-1.12-0.471-1.467 C74.223,21.156,73.76,20.979,73.15,20.979L73.15,20.979L73.15,20.979z M73.148,16.522c2.059,0,3.715,0.584,4.971,1.76 c1.248,1.175,1.873,2.734,1.873,4.677c0,1.949-0.625,3.508-1.873,4.683c-1.256,1.175-2.912,1.759-4.971,1.759 c-2.057,0-3.707-0.59-4.963-1.759c-1.25-1.175-1.881-2.734-1.881-4.683c0-1.942,0.631-3.507,1.881-4.677 C69.441,17.107,71.092,16.522,73.148,16.522L73.148,16.522L73.148,16.522z M0,46.167h20.844v45.98H0V46.167L0,46.167z</Geometry>
+            <Geometry x:Key="ticketPercent" >M121.9,44.6l-9.6-9.6c-4.1,2.5-9.6,2-13.1-1.6c-3.6-3.6-4.1-9-1.6-13.1L88,10.7c-1.3-1.3-3.4-1.3-4.6,0
+	L71.2,22.8c0.1,0.5-0.1,1-0.5,1.4c-0.4,0.4-0.9,0.5-1.4,0.5l-4.2,4.2c0,0.7,0.1,1.3,0.1,2c0,18.9-15.4,34.3-34.3,34.3
+	c-0.7,0-1.3,0-2-0.1L10.7,83.4c-1.3,1.3-1.3,3.4,0,4.6l9.6,9.6c4.2-2.7,9.8-2.3,13.4,1.4c3.6,3.7,4.1,9.3,1.4,13.4l9.5,9.5
+	c1.3,1.3,3.4,1.3,4.6,0l58.6-58.6c-0.1-0.5,0.1-1,0.5-1.4c0.4-0.4,0.9-0.5,1.4-0.5l12.1-12.1C123.2,48,123.2,45.9,121.9,44.6z
+	 M86.1,39.7c0.7-0.7,1.7-0.7,2.4,0c0.7,0.7,0.7,1.7,0,2.4c-0.7,0.7-1.7,0.7-2.4,0C85.5,41.4,85.5,40.3,86.1,39.7z M81.7,35.2
+	c0.7-0.7,1.7-0.7,2.4,0c0.7,0.7,0.7,1.7,0,2.4c-0.7,0.7-1.7,0.7-2.4,0C81,36.9,81,35.9,81.7,35.2z M77.2,30.8c0.7-0.7,1.7-0.7,2.4,0
+	c0.7,0.7,0.7,1.7,0,2.4c-0.7,0.7-1.7,0.7-2.4,0C76.6,32.5,76.6,31.4,77.2,30.8z M72.8,26.3c0.7-0.7,1.7-0.7,2.4,0
+	c0.7,0.7,0.7,1.7,0,2.4c-0.7,0.7-1.7,0.7-2.4,0C72.1,28.1,72.1,27,72.8,26.3z M91.5,64.5l-36.3,36.3c-1.5,1.5-3.9,1.5-5.4,0
+	L33.2,84.1c-1.5-1.5-1.5-3.9,0-5.4l36.3-36.3c1.5-1.5,3.9-1.5,5.4,0l16.7,16.7C93,60.6,93,63,91.5,64.5z M93,46.5
+	c-0.7,0.7-1.7,0.7-2.4,0c-0.7-0.7-0.7-1.7,0-2.4c0.7-0.7,1.7-0.7,2.4,0C93.6,44.8,93.6,45.8,93,46.5z M97.4,51
+	c-0.7,0.7-1.7,0.7-2.4,0c-0.7-0.7-0.7-1.7,0-2.4c0.7-0.7,1.7-0.7,2.4,0C98.1,49.2,98.1,50.3,97.4,51z M101.9,55.4
+	c-0.7,0.7-1.7,0.7-2.4,0c-0.7-0.7-0.7-1.7,0-2.4c0.7-0.7,1.7-0.7,2.4,0C102.5,53.7,102.5,54.7,101.9,55.4z M106.3,59.8
+	c-0.7,0.7-1.7,0.7-2.4,0c-0.7-0.7-0.7-1.7,0-2.4c0.7-0.7,1.7-0.7,2.4,0S107,59.2,106.3,59.8z M30.9,0C13.8,0,0,13.8,0,30.9
+	C0,48,13.8,61.8,30.9,61.8s30.9-13.8,30.9-30.9C61.8,13.8,47.9,0,30.9,0z M30.9,56C17,56,5.8,44.7,5.8,30.9S17,5.8,30.9,5.8
+	C44.7,5.8,56,17,56,30.9C56,44.7,44.7,56,30.9,56z M36.7,18.9h6l-17.7,24h-6L36.7,18.9L36.7,18.9L36.7,18.9z M46.6,31.9
+	c-1.4-1.3-3.1-1.9-5.4-1.9c-2.2,0-4,0.6-5.4,1.9c-1.4,1.3-2,3-2,5.1c0,2.1,0.7,3.8,2,5.1c1.4,1.3,3.2,1.9,5.4,1.9s4-0.6,5.4-1.9
+	c1.4-1.3,2-3,2-5.1C48.7,34.8,48,33.1,46.6,31.9z M42.7,38.5c-0.3,0.4-0.8,0.6-1.5,0.6c-0.7,0-1.2-0.2-1.5-0.6
+	c-0.3-0.4-0.5-0.9-0.5-1.6c0-0.7,0.2-1.2,0.5-1.6c0.3-0.4,0.8-0.6,1.5-0.6c0.7,0,1.2,0.2,1.5,0.6c0.3,0.4,0.5,0.9,0.5,1.6
+	C43.3,37.6,43.1,38.2,42.7,38.5z M25.8,19.8c-1.4-1.3-3.2-1.9-5.4-1.9c-2.2,0-4,0.6-5.4,1.9c-1.4,1.3-2,3-2,5.1c0,2.1,0.7,3.8,2,5.1
+	c1.4,1.3,3.1,1.9,5.4,1.9c2.2,0,4-0.6,5.4-1.9c1.4-1.3,2-3,2-5.1C27.9,22.8,27.2,21.1,25.8,19.8z M21.9,26.5
+	c-0.3,0.4-0.8,0.6-1.5,0.6c-0.7,0-1.1-0.2-1.5-0.6c-0.3-0.4-0.5-0.9-0.5-1.6c0-0.7,0.2-1.2,0.5-1.6c0.3-0.4,0.8-0.6,1.5-0.6
+	c0.7,0,1.2,0.2,1.5,0.6c0.3,0.4,0.5,0.9,0.5,1.6C22.5,25.5,22.3,26.1,21.9,26.5z</Geometry>
+            <Geometry x:Key="user" >M74,0A74,74,0,0,0,27.26,131.41l.08.06,2.75,2.13,0,0a74,74,0,0,0,87.82,0c1-.71,1.93-1.45,2.86-2.22A74,74,0,0,0,74,0Zm45.63,123.07A46.89,46.89,0,0,0,89,89.17a33.07,33.07,0,1,0-29.86,0,46.89,46.89,0,0,0-30.7,33.9,67,67,0,1,1,91.26,0Z</Geometry>
+            <Geometry x:Key="invoice" >M110.2,2.4H17.8c-2.4,0-4.3,1.9-4.3,4.3v114.6c0,2.4,1.9,4.3,4.3,4.3c1.1,0,2.2-0.5,3.1-1.3l8.5-8.5l8.5,8.5
+            c1.7,1.7,4.4,1.7,6.1,0l8.5-8.5l8.5,8.5c1.7,1.7,4.4,1.7,6.1,0l8.5-8.5l8.5,8.5c1.7,1.7,4.4,1.7,6.1,0l8.5-8.5l8.5,8.5
+            c1.7,1.7,4.4,1.7,6.1,0c0.8-0.8,1.3-1.9,1.3-3.1V6.7C114.5,4.3,112.6,2.4,110.2,2.4z M38.4,23.9h42.7c1.9,0,3.4,1.5,3.4,3.4
+            s-1.5,3.4-3.4,3.4H38.4c-1.8,0-3.4-1.6-3.4-3.4C35,25.4,36.5,23.9,38.4,23.9z M60.3,64.4H38.4c-1.8,0-3.4-1.5-3.4-3.4
+            s1.5-3.4,3.4-3.4h21.9c1.9,0,3.4,1.5,3.4,3.4S62.2,64.4,60.3,64.4z M38.4,47.6c-1.8,0-3.4-1.5-3.4-3.4s1.5-3.4,3.4-3.4h42.7
+            c1.9,0,3.4,1.5,3.4,3.4s-1.5,3.4-3.4,3.4H38.4z M93.5,83.6c-0.2,0.8-0.6,1.5-1.1,2.1c-0.6,0.6-1.3,1.2-2.1,1.6c-1,0.5-2,0.8-3.1,1
+            v4.6h-4.8v-4.5c-1.5,0-3.1-0.3-4.5-0.8c-0.8-0.3-1.7-0.6-2.5-1l1.6-4.3c1.1,0.5,2.1,0.9,3.2,1.2c1.3,0.3,2.6,0.5,3.9,0.5
+            c1.1,0.1,2.2-0.1,3.2-0.6c0.5-0.4,0.8-1.1,0.8-1.8c0.1-0.4-0.1-0.8-0.3-1.2c-0.3-0.3-0.6-0.7-1-0.9c-0.5-0.3-1-0.6-1.6-0.8
+            c-0.7-0.2-1.4-0.5-2.3-0.8c-0.8-0.3-1.6-0.6-2.4-1c-0.8-0.3-1.5-0.8-2.2-1.3c-1.4-1.1-2.2-2.9-2.1-4.7c0-0.8,0.2-1.6,0.4-2.4
+            c0.2-0.8,0.6-1.5,1.1-2.1c0.6-0.7,1.2-1.2,2-1.6c0.9-0.5,1.9-0.8,2.9-1v-4.3h4.6v3.9c1.2,0.1,2.3,0.3,3.4,0.6
+            c0.7,0.2,1.5,0.5,2.2,0.8l-1.2,4.5c-0.9-0.4-1.9-0.7-2.9-0.9c-1.2-0.3-2.3-0.4-3.5-0.4c-0.9-0.1-1.8,0.1-2.6,0.6
+            c-0.5,0.4-0.8,1-0.8,1.6c-0.1,0.3,0,0.7,0.2,1s0.5,0.6,0.8,0.8c0.4,0.3,0.8,0.5,1.3,0.7s1.2,0.4,1.9,0.7c1.1,0.4,2.1,0.8,3.1,1.3
+            c0.9,0.4,1.8,0.9,2.5,1.6c0.7,0.6,1.2,1.4,1.6,2.2c0.4,0.9,0.6,1.9,0.6,2.9C93.8,82.1,93.7,82.9,93.5,83.6z M0.5,60.8L0.5,60.8
+            l0-1.6h0V60.8z M127.3,71.6L127.3,71.6l0-1.6h0V71.6z</Geometry>
+            <Geometry x:Key="company" >M46,16h1v2h-1V16z M52,37h1v2h-1V37z M46,30h1v2h-1V30z M40,23h1v2h-1V23z M40,16h1v2h-1V16z M46,23h1v2h-1V23z M40,37h1v2
+            h-1V37z M46,37h1v2h-1V37z M52,16h1v2h-1V16z M52,30h1v2h-1V30z M40,30h1v2h-1V30z M52,23h1v2h-1V23z M59,57v-2h-1V11H48V9h8V3H46v8
+            H35v18h-2c-0.6-6-6-10.5-12-9.9c-5.2,0.5-9.4,4.7-9.9,9.9H6v26H5v2H3v4h58v-4H59z M48,5h6v2h-6V5z M22,22c1.1,0,2,0.9,2,2
+            s-0.9,2-2,2s-2-0.9-2-2S20.9,22,22,22z M32,53H10v-6h22V53z M32,46H10v-6h22V46z M32,39H10v-6h22V39z M53,55H41v-4.5
+            c0-3,2.5-5.5,5.5-5.5h1c3,0,5.5,2.5,5.5,5.5V55z M50,14h5v6h-5V14z M50,21h5v6h-5V21z M50,28h5v6h-5V28z M50,35h5v6h-5V35z M44,14h5
+            v6h-5V14z M44,21h5v6h-5V21z M44,28h5v6h-5V28z M44,35h5v6h-5V35z M38,14h5v6h-5V14z M38,21h5v6h-5V21z M38,28h5v6h-5V28z M38,35h5
+            v6h-5V35z M16.4,33.2v20 M17,32.9h-1.1v20.2H17V32.9z M26.6,32.8h-1.1V53h1.1V32.8z</Geometry>
+            <Geometry x:Key="printerCopyCount" >M72.17,60.87l38-6.11c3.37-0.54,6.58,1.78,7.12,5.15l5.51,34.24c0.54,3.37-1.78,6.58-5.15,7.12l-38,6.11 c-3.37,0.54-6.58-1.78-7.12-5.15l-5.51-34.24C66.48,64.62,68.8,61.41,72.17,60.87L72.17,60.87z M91.64,76.94l-7.35-0.08 c0.22-2.37,1.06-4.3,2.55-5.8c1.48-1.49,3.77-2.5,6.85-3.01c3.55-0.59,6.21-0.36,8.02,0.7c1.8,1.06,2.87,2.59,3.2,4.59 c0.2,1.17,0.05,2.29-0.43,3.35s-1.3,2.05-2.48,2.98c1.09,0.08,1.95,0.25,2.56,0.51c1,0.41,1.82,1.02,2.47,1.85 c0.65,0.83,1.09,1.87,1.3,3.13c0.26,1.58,0.11,3.17-0.48,4.77c-0.59,1.59-1.59,2.91-3.02,3.95c-1.43,1.04-3.41,1.78-5.95,2.2 c-2.47,0.41-4.47,0.45-5.99,0.1c-1.53-0.34-2.84-1-3.95-1.96c-1.1-0.97-2.05-2.26-2.83-3.88l7.39-2.27 c0.55,1.48,1.19,2.46,1.91,2.95c0.72,0.49,1.56,0.65,2.53,0.49c1.01-0.17,1.79-0.68,2.34-1.54c0.55-0.85,0.72-1.9,0.51-3.14 c-0.21-1.26-0.7-2.18-1.46-2.77c-0.76-0.58-1.7-0.78-2.81-0.6c-0.59,0.1-1.38,0.38-2.36,0.85l-0.51-5.47 c0.42-0.01,0.75-0.03,0.98-0.07c0.98-0.16,1.74-0.62,2.29-1.35c0.55-0.74,0.75-1.53,0.61-2.39c-0.14-0.83-0.5-1.45-1.06-1.85 c-0.58-0.41-1.29-0.55-2.15-0.4c-0.89,0.15-1.56,0.53-2.03,1.16C91.83,74.57,91.61,75.57,91.64,76.94L91.64,76.94z M62.77,11.41 l4.62,27.72l-7.65,1.28l-3.02-18.13c-1.08,1.15-2.15,2.1-3.22,2.87c-1.06,0.77-2.43,1.57-4.08,2.39l-1.03-6.17 c2.44-1.27,4.27-2.6,5.5-4.01c1.23-1.41,2.11-3.04,2.63-4.9L62.77,11.41L62.77,11.41z M17.77,56.97l36.92,10.88 c3.28,0.97,5.17,4.44,4.2,7.72l-9.8,33.26c-0.97,3.28-4.44,5.17-7.72,4.2L4.46,102.16c-3.28-0.97-5.17-4.44-4.2-7.72l9.8-33.26 C11.02,57.9,14.49,56.01,17.77,56.97L17.77,56.97z M44.48,86l-5.06-0.72c-0.28,0.32-0.59,0.63-0.93,0.92 c-1.28,1.1-3.32,2.13-6.12,3.08c-1.66,0.54-2.77,0.94-3.35,1.18c-0.58,0.25-1.27,0.58-2.08,1.01l10.68,3.16l-1.65,5.56l-20.51-6.06 c0.83-1.95,2.11-3.65,3.83-5.07c1.72-1.43,4.57-2.88,8.57-4.34c0.76-0.28,1.43-0.54,2.03-0.79l0,0c1.34-0.56,2.28-1.04,2.83-1.46 c0.79-0.61,1.29-1.26,1.49-1.95c0.22-0.75,0.14-1.47-0.26-2.17c-0.4-0.7-1.02-1.17-1.86-1.42c-0.87-0.26-1.67-0.19-2.38,0.19 c-0.72,0.39-1.38,1.25-1.98,2.59l-6.67-2.58c0.84-1.85,1.78-3.2,2.81-4.07c1.04-0.87,2.29-1.4,3.76-1.59 c1.48-0.19,3.36,0.05,5.67,0.74c2.4,0.71,4.19,1.54,5.37,2.48c1.17,0.94,1.98,2.09,2.4,3.45c0.43,1.37,0.44,2.75,0.02,4.16 c-0.33,1.1-0.88,2.09-1.66,2.99L44.48,86L44.48,86z M36.49,6.19l38-6.11c3.37-0.54,6.58,1.78,7.12,5.15l5.51,34.24 c0.54,3.37-1.78,6.58-5.15,7.12l-38,6.11c-3.37,0.54-6.58-1.78-7.12-5.15l-5.51-34.24C30.8,9.94,33.12,6.73,36.49,6.19L36.49,6.19z</Geometry>
+            <Geometry x:Key="recurringSubscription" >M115.47,65.19c-2.39,12.7-9.16,23.86-18.67,31.85c-9.57,8.04-21.89,12.88-35.33,12.88c-12.63,0-24.28-4.27-33.57-11.45 C18.4,91.14,11.38,80.77,8.27,68.81l6.86-1.78c2.7,10.41,8.82,19.44,17.09,25.83c8.08,6.24,18.22,9.95,29.24,9.95 c11.73,0,22.47-4.21,30.78-11.19c7.95-6.68,13.7-15.91,15.98-26.44h-7.33l10.99-13.39l10.99,13.39H115.47L115.47,65.19z M61.29,69.07V56.52c-4.42-1.12-7.65-2.81-9.7-5.07c-2.06-2.27-3.1-5.02-3.1-8.26c0-3.28,1.17-6.04,3.5-8.26 c2.33-2.23,5.43-3.51,9.3-3.85v-2.95h4.94v2.95c3.62,0.38,6.49,1.47,8.64,3.26c2.13,1.79,3.5,4.19,4.09,7.19l-8.63,0.98 c-0.53-2.36-1.9-3.96-4.1-4.8v11.71c5.46,1.29,9.18,2.98,11.15,5.04c1.98,2.07,2.97,4.72,2.97,7.96c0,3.62-1.24,6.66-3.73,9.14 c-2.49,2.48-5.95,4.02-10.39,4.63v5.6h-4.94v-5.53c-3.9-0.42-7.06-1.69-9.51-3.83c-2.45-2.14-4-5.17-4.68-9.08l8.83-0.92 c0.36,1.6,1.04,2.97,2.04,4.13C58.97,67.72,60.07,68.55,61.29,69.07L61.29,69.07z M61.29,37.6c-1.33,0.42-2.38,1.11-3.15,2.07 c-0.78,0.96-1.16,2.02-1.16,3.18c0,1.06,0.35,2.04,1.06,2.95c0.71,0.9,1.8,1.64,3.26,2.19V37.6L61.29,37.6z M66.23,69.57 c1.7-0.33,3.1-1.05,4.16-2.15C71.47,66.31,72,65.01,72,63.5c0-1.33-0.45-2.49-1.36-3.45c-0.89-0.97-2.36-1.71-4.42-2.23V69.57 L66.23,69.57z M7.46,44.74C9.83,32.15,16.5,21.08,25.87,13.1C35.47,4.93,47.9,0,61.46,0c11.93,0,22.97,3.8,31.98,10.26 c9.25,6.63,16.35,16.06,20.08,27.06l-3.36,1.14l-3.36,1.14c-0.09-0.28-0.19-0.56-0.29-0.83c-3.31-9.21-9.38-17.11-17.2-22.72 c-7.84-5.62-17.45-8.93-27.84-8.93c-11.84,0-22.67,4.28-31.01,11.38c-7.84,6.67-13.49,15.82-15.76,26.24h7.29L10.99,58.13L0,44.74 H7.46L7.46,44.74z</Geometry>
+            <Geometry x:Key="saveBtn" >M250.4,433.1c-54.5,0-109,0.1-163.5-0.1c-6.8,0-13.7-0.3-20.4-1.6c-23.7-4.8-38-22-39.4-46.9c-0.4-7.1-0.3-14.3-0.3-21.5
+	c0-106.5,0-213,0.1-319.4c0-5.6,0.4-11.4,1.5-16.9c5-24,22.3-37.9,48.6-39.4c2.3-0.1,4.7-0.1,7-0.1c99-0.1,198,0,296.9-0.3
+	c12.8,0,22.6,4.2,31.4,13.4c16.3,17.1,33.2,33.7,50.1,50.2c6.9,6.8,10.5,14.6,10.5,24.4c-0.1,101.3-0.2,202.6-0.2,303.9
+	c0,10-1.8,19.6-6.5,28.5c-8.8,16.6-23.5,23.9-41.5,25.4c-7.1,0.6-14.3,0.3-21.5,0.3C352.4,433.1,301.4,433.1,250.4,433.1z
+	 M249.4,211.7C249.4,211.6,249.4,211.6,249.4,211.7c-34.5-0.1-69-0.1-103.5,0c-7.3,0-14.7-0.1-22,0.4c-13,0.9-19.2,7.3-20.2,20.3
+	c-0.1,1.3-0.2,2.7-0.2,4c0,40.8-0.2,81.6,0.2,122.5c0.1,14.8,6.4,21.1,21,22.8c2.6,0.3,5.3,0.4,8,0.4c78.2,0,156.3,0,234.5,0
+	c3,0,6-0.2,9-0.6c12.6-1.6,18.3-7.3,19.8-19.9c0.3-2.1,0.3-4.3,0.3-6.5c0-38.3,0.1-76.7,0-115c0-22-6.4-28.3-28.3-28.4
+	C328.4,211.6,288.9,211.7,249.4,211.7z M249.9,13.9c-28.2,0-56.3,0-84.5,0c-10.9,0-13.6,2.7-13.6,13.6c0,31.2,0,62.3,0,93.5
+	c0,11.2,3,14.1,14.3,14.1c56,0,112,0,167.9,0c11.3,0,14.1-2.8,14.1-14.2c0-30.8,0-61.6,0-92.5c0-11.9-2.5-14.5-14.3-14.5
+	C305.8,13.9,277.8,13.9,249.9,13.9z M323.7,50.1c-0.1-8.2-4.8-13-13-13.2c-7.5-0.1-15-0.1-22.5,0c-7.6,0.2-12.6,4.8-12.7,12.5
+	c-0.2,17.3-0.2,34.6,0,51.9c0.1,8,5.1,12.6,13,12.7c7.2,0.1,14.3,0.1,21.5,0c8.9-0.1,13.6-4.7,13.7-13.5c0.1-8.3,0-16.6,0-25
+	C323.7,67.1,323.8,58.6,323.7,50.1z M364.7,257.2L364.7,257.2c0-3.4-2.8-6.2-6.2-6.2H141.5c-3.4,0-6.2,2.8-6.2,6.2l0,0
+	c0,3.4,2.8,6.2,6.2,6.2h217.1C361.9,263.3,364.7,260.6,364.7,257.2z M364.7,296.8L364.7,296.8c0-3.4-2.8-6.2-6.2-6.2H141.5
+	c-3.4,0-6.2,2.8-6.2,6.2v0c0,3.4,2.8,6.2,6.2,6.2h217.1C361.9,302.9,364.7,300.2,364.7,296.8z M364.7,336.4L364.7,336.4
+	c0-3.4-2.8-6.2-6.2-6.2H141.5c-3.4,0-6.2,2.8-6.2,6.2v0c0,3.4,2.8,6.2,6.2,6.2h217.1C361.9,342.6,364.7,339.8,364.7,336.4z</Geometry>
+            <Geometry x:Key="accuracySymbol" >M19.3,9.6c0,1.2-0.4,2.2-1.2,3.1c-0.8,0.9-1.8,1.4-3,1.4c-1.3,0-2.3-0.5-3-1.4c-0.7-1-1.1-2-1.1-3.1c0-1.2,0.4-2.2,1.2-3.1
+	C13.1,5.5,14,5,15.2,5c1.2,0,2.2,0.5,3,1.4C18.9,7.4,19.3,8.4,19.3,9.6z M16.3,9.6c0-0.7,0-1.2,0-1.7c0-0.5-0.1-0.9-0.1-1.4
+	C16.1,6,16,5.7,15.8,5.5c-0.1-0.2-0.4-0.3-0.6-0.3c-0.3,0-0.5,0.1-0.6,0.3c-0.2,0.2-0.3,0.5-0.3,0.9c-0.1,0.4-0.1,0.9-0.1,1.4
+	c0,0.6,0,1.1,0,1.7c0,0.6,0,1.2,0,1.7c0,0.5,0.1,1,0.1,1.4c0.1,0.4,0.2,0.8,0.3,0.9c0.1,0.2,0.4,0.3,0.6,0.3c0.3,0,0.5-0.1,0.6-0.3
+	c0.2-0.2,0.3-0.5,0.3-0.9c0.1-0.4,0.1-0.9,0.1-1.5C16.3,10.6,16.3,10.1,16.3,9.6z M20.2,12.9c0-0.3,0.1-0.6,0.3-0.8s0.5-0.3,0.8-0.3
+	c0.3,0,0.6,0.1,0.8,0.3s0.4,0.5,0.4,0.8s-0.1,0.6-0.3,0.8C22,13.9,21.7,14,21.4,14c-0.3,0-0.6-0.1-0.8-0.3
+	C20.3,13.5,20.2,13.2,20.2,12.9z M31.7,9.6c0,1.2-0.4,2.2-1.2,3.1c-0.8,0.9-1.8,1.4-3,1.4c-1.3,0-2.3-0.5-3-1.4
+	c-0.7-1-1.1-2-1.1-3.1c0-1.2,0.4-2.2,1.2-3.1C25.4,5.5,26.4,5,27.5,5c1.2,0,2.2,0.5,3,1.4C31.3,7.4,31.7,8.4,31.7,9.6z M28.7,9.6
+	c0-0.7,0-1.2,0-1.7c0-0.5-0.1-0.9-0.1-1.4c-0.1-0.4-0.2-0.8-0.3-0.9c-0.1-0.2-0.4-0.3-0.6-0.3c-0.3,0-0.5,0.1-0.6,0.3
+	S26.7,6,26.6,6.4c-0.1,0.4-0.1,0.9-0.1,1.4c0,0.6,0,1.1,0,1.7c0,0.6,0,1.2,0,1.7c0,0.5,0.1,1,0.1,1.4c0.1,0.4,0.2,0.8,0.3,0.9
+	c0.1,0.2,0.4,0.3,0.6,0.3c0.3,0,0.5-0.1,0.6-0.3c0.2-0.2,0.3-0.5,0.3-0.9c0.1-0.4,0.1-0.9,0.1-1.5C28.7,10.6,28.7,10.1,28.7,9.6z
+	 M40.8,9.6c0,1.2-0.4,2.2-1.2,3.1c-0.8,0.9-1.8,1.4-3,1.4c-1.3,0-2.3-0.5-3-1.4c-0.7-1-1.1-2-1.1-3.1c0-1.2,0.4-2.2,1.2-3.1
+	C34.5,5.5,35.5,5,36.6,5c1.2,0,2.2,0.5,3,1.4C40.4,7.4,40.8,8.4,40.8,9.6z M37.8,9.6c0-0.7,0-1.2,0-1.7c0-0.5-0.1-0.9-0.1-1.4
+	c-0.1-0.4-0.2-0.8-0.3-0.9c-0.1-0.2-0.4-0.3-0.6-0.3c-0.3,0-0.5,0.1-0.6,0.3S35.8,6,35.7,6.4c-0.1,0.4-0.1,0.9-0.1,1.4
+	c0,0.6,0,1.1,0,1.7c0,0.6,0,1.2,0,1.7c0,0.5,0.1,1,0.1,1.4c0.1,0.4,0.2,0.8,0.3,0.9c0.1,0.2,0.4,0.3,0.6,0.3c0.3,0,0.5-0.1,0.6-0.3
+	c0.2-0.2,0.3-0.5,0.3-0.9c0.1-0.4,0.1-0.9,0.1-1.5C37.8,10.6,37.8,10.1,37.8,9.6z</Geometry>
+
+
+            <!--<Geometry x:Key="" ></Geometry>-->
+            <!--<Geometry x:Key="" ></Geometry>-->
+            
+
+            <!--#region  Colors-->
+            <SolidColorBrush x:Key="MainColor" Color="#2491EA"/>
+            <SolidColorBrush x:Key="SecondColor" Color="#545E66"/>
+            <SolidColorBrush x:Key="background" Color="#EEF1F8"/>
+            <SolidColorBrush x:Key="Blue" Color="#178DD2"/>
+            <SolidColorBrush x:Key="Orange" Color="#FFA926"/>
+            <SolidColorBrush x:Key="Red" Color="#D22A17"/>
+            <SolidColorBrush x:Key="Grey" Color="#4E4E4E"/>
+            <SolidColorBrush x:Key="LightGrey" Color="#8C8C8C"/>
+            <SolidColorBrush x:Key="veryLightGrey" Color="#DFDFDF"/>
+            <SolidColorBrush x:Key="lightGreen" Color="#E2EFDA"/>
+            <SolidColorBrush x:Key="lightRed" Color="#FCE4D6"/>
+            <SolidColorBrush x:Key="mediumGreen" Color="#008A1C"/>
+            <SolidColorBrush x:Key="mediumRed" Color="#E53D29"/>
+            <SolidColorBrush x:Key="White" Color="#FFFFFF"/>
+            <SolidColorBrush x:Key="MainColorBlue" Color="#178DD2"/>
+            <SolidColorBrush x:Key="MainColorOrange" Color="#FFA926"/>
+            <SolidColorBrush x:Key="MainColorGrey" Color="#4E4E4E"/>
+            <SolidColorBrush x:Key="MainColorlightGrey" Color="#DFDFDF"/>
+            <SolidColorBrush x:Key="MainColorRed" Color="#D22A17"/>
+            <!--#endregion-->
+
+            <ResourceDictionary.MergedDictionaries>
+            <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.blue.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Blue.xaml" />
+        </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

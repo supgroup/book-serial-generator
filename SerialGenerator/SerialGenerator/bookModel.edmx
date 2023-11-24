@@ -1,0 +1,894 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="bookModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'bookserialdb.dbo.customers' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="customers">
+          <Key>
+            <PropertyRef Name="custId" />
+            <PropertyRef Name="custname" />
+            <PropertyRef Name="balance" />
+            <PropertyRef Name="balanceType" />
+          </Key>
+          <Property Name="custId" Type="int" Nullable="false" />
+          <Property Name="custname" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="lastName" Type="nvarchar" MaxLength="500" />
+          <Property Name="company" Type="nvarchar" MaxLength="500" />
+          <Property Name="email" Type="nvarchar" MaxLength="500" />
+          <Property Name="phone" Type="nvarchar" MaxLength="500" />
+          <Property Name="mobile" Type="nvarchar" MaxLength="500" />
+          <Property Name="fax" Type="nvarchar" MaxLength="500" />
+          <Property Name="address" Type="nvarchar" MaxLength="500" />
+          <Property Name="custlevel" Type="nvarchar" MaxLength="500" />
+          <Property Name="createDate" Type="datetime2" Precision="7" />
+          <Property Name="updateDate" Type="datetime2" Precision="7" />
+          <Property Name="custCode" Type="nvarchar" MaxLength="500" />
+          <Property Name="image" Type="ntext" />
+          <Property Name="notes" Type="nvarchar" MaxLength="500" />
+          <Property Name="balance" Type="decimal" Precision="20" Scale="3" Nullable="false" />
+          <Property Name="balanceType" Type="tinyint" Nullable="false" />
+          <Property Name="createUserId" Type="int" />
+          <Property Name="updateUserId" Type="int" />
+          <Property Name="isActive" Type="int" />
+          <Property Name="countryId" Type="int" />
+        </EntityType>
+        <EntityType Name="customerserials">
+          <Key>
+            <PropertyRef Name="customerSerialId" />
+          </Key>
+          <Property Name="customerSerialId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="serial" Type="nvarchar(max)" />
+          <Property Name="officeName" Type="nvarchar" MaxLength="500" />
+          <Property Name="Number" Type="nvarchar" MaxLength="500" />
+          <Property Name="customerHardCode" Type="nvarchar(max)" />
+          <Property Name="activateCode" Type="nvarchar(max)" />
+          <Property Name="startDate" Type="datetime2" Precision="7" />
+          <Property Name="expireDate" Type="datetime2" Precision="7" />
+          <Property Name="yearCount" Type="int" Nullable="false" />
+          <Property Name="bookDate" Type="datetime2" Precision="7" />
+          <Property Name="confirmStat" Type="nvarchar" MaxLength="10" />
+          <Property Name="notes" Type="nvarchar" MaxLength="500" />
+          <Property Name="createDate" Type="datetime2" Precision="7" />
+          <Property Name="updateDate" Type="datetime2" Precision="7" />
+          <Property Name="createUserId" Type="int" />
+          <Property Name="updateUserId" Type="int" />
+          <Property Name="isActive" Type="int" />
+          <Property Name="type" Type="nvarchar" MaxLength="10" />
+          <Property Name="activatedate" Type="datetime2" Precision="7" />
+          <Property Name="isProgramActivated" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="error">
+          <Key>
+            <PropertyRef Name="errorId" />
+          </Key>
+          <Property Name="errorId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="num" Type="nvarchar" MaxLength="200" />
+          <Property Name="msg" Type="ntext" />
+          <Property Name="stackTrace" Type="ntext" />
+          <Property Name="targetSite" Type="ntext" />
+          <Property Name="createDate" Type="datetime2" Precision="7" />
+          <Property Name="createUserId" Type="int" />
+        </EntityType>
+        <EntityType Name="office">
+          <Key>
+            <PropertyRef Name="officeId" />
+          </Key>
+          <Property Name="officeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="500" />
+          <Property Name="agentName" Type="nvarchar" MaxLength="500" />
+          <Property Name="joinDate" Type="datetime2" Precision="7" />
+          <Property Name="mobile" Type="nvarchar" MaxLength="500" />
+          <Property Name="address" Type="nvarchar(max)" />
+          <Property Name="userName" Type="nvarchar" MaxLength="500" />
+          <Property Name="passwordSY" Type="nvarchar" MaxLength="500" />
+          <Property Name="PasswordSoto" Type="nvarchar" MaxLength="500" />
+          <Property Name="notes" Type="nvarchar(max)" />
+          <Property Name="createDate" Type="datetime2" Precision="7" />
+          <Property Name="updateDate" Type="datetime2" Precision="7" />
+          <Property Name="createUserId" Type="int" />
+          <Property Name="updateUserId" Type="int" />
+          <Property Name="isActive" Type="bit" />
+          <Property Name="balance" Type="decimal" Precision="20" Scale="3" />
+          <Property Name="commission_ratio" Type="decimal" Precision="20" Scale="3" />
+          <Property Name="code" Type="nvarchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="setting">
+          <Key>
+            <PropertyRef Name="settingId" />
+          </Key>
+          <Property Name="settingId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="200" />
+          <Property Name="notes" Type="ntext" />
+        </EntityType>
+        <EntityType Name="setValues">
+          <Key>
+            <PropertyRef Name="valId" />
+          </Key>
+          <Property Name="valId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="value" Type="ntext" />
+          <Property Name="isDefault" Type="int" Nullable="false" />
+          <Property Name="isSystem" Type="int" Nullable="false" />
+          <Property Name="notes" Type="ntext" />
+          <Property Name="settingId" Type="int" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="users">
+          <Key>
+            <PropertyRef Name="userId" />
+          </Key>
+          <Property Name="userId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="AccountName" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="lastName" Type="nvarchar" MaxLength="500" />
+          <Property Name="company" Type="nvarchar" MaxLength="500" />
+          <Property Name="email" Type="nvarchar" MaxLength="500" />
+          <Property Name="phone" Type="nvarchar" MaxLength="500" />
+          <Property Name="mobile" Type="nvarchar" MaxLength="500" />
+          <Property Name="fax" Type="nvarchar" MaxLength="500" />
+          <Property Name="address" Type="nvarchar" MaxLength="500" />
+          <Property Name="agentLevel" Type="nvarchar" MaxLength="500" />
+          <Property Name="createDate" Type="datetime2" Precision="7" />
+          <Property Name="updateDate" Type="datetime2" Precision="7" />
+          <Property Name="password" Type="nvarchar" MaxLength="500" />
+          <Property Name="type" Type="nvarchar" MaxLength="10" />
+          <Property Name="image" Type="ntext" />
+          <Property Name="notes" Type="nvarchar" MaxLength="500" />
+          <Property Name="balance" Type="decimal" Precision="20" Scale="3" Nullable="false" />
+          <Property Name="createUserId" Type="int" />
+          <Property Name="updateUserId" Type="int" />
+          <Property Name="isActive" Type="bit" />
+          <Property Name="code" Type="nvarchar" MaxLength="500" />
+          <Property Name="isAdmin" Type="bit" />
+          <Property Name="groupId" Type="int" />
+          <Property Name="balanceType" Type="tinyint" />
+          <Property Name="job" Type="nvarchar" MaxLength="100" />
+          <Property Name="isOnline" Type="tinyint" />
+          <Property Name="countryId" Type="int" />
+        </EntityType>
+        <EntityType Name="userSetValues">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="userId" Type="int" />
+          <Property Name="valId" Type="int" />
+          <Property Name="note" Type="ntext" />
+          <Property Name="createDate" Type="datetime2" Precision="7" />
+          <Property Name="updateDate" Type="datetime2" Precision="7" />
+          <Property Name="createUserId" Type="int" />
+          <Property Name="updateUserId" Type="int" />
+        </EntityType>
+        <Association Name="FK_customers_users">
+          <End Role="users" Type="Self.users" Multiplicity="0..1" />
+          <End Role="customers" Type="Self.customers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="userId" />
+            </Principal>
+            <Dependent Role="customers">
+              <PropertyRef Name="createUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_customers_users1">
+          <End Role="users" Type="Self.users" Multiplicity="0..1" />
+          <End Role="customers" Type="Self.customers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="userId" />
+            </Principal>
+            <Dependent Role="customers">
+              <PropertyRef Name="updateUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_customerserials_users">
+          <End Role="users" Type="Self.users" Multiplicity="0..1" />
+          <End Role="customerserials" Type="Self.customerserials" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="userId" />
+            </Principal>
+            <Dependent Role="customerserials">
+              <PropertyRef Name="createUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_customerserials_users1">
+          <End Role="users" Type="Self.users" Multiplicity="0..1" />
+          <End Role="customerserials" Type="Self.customerserials" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="userId" />
+            </Principal>
+            <Dependent Role="customerserials">
+              <PropertyRef Name="updateUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_error_users">
+          <End Role="users" Type="Self.users" Multiplicity="0..1" />
+          <End Role="error" Type="Self.error" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="userId" />
+            </Principal>
+            <Dependent Role="error">
+              <PropertyRef Name="createUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_office_users">
+          <End Role="users" Type="Self.users" Multiplicity="0..1" />
+          <End Role="office" Type="Self.office" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="userId" />
+            </Principal>
+            <Dependent Role="office">
+              <PropertyRef Name="createUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_office_users1">
+          <End Role="users" Type="Self.users" Multiplicity="0..1" />
+          <End Role="office" Type="Self.office" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="userId" />
+            </Principal>
+            <Dependent Role="office">
+              <PropertyRef Name="updateUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_setValues_setting">
+          <End Role="setting" Type="Self.setting" Multiplicity="0..1" />
+          <End Role="setValues" Type="Self.setValues" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="setting">
+              <PropertyRef Name="settingId" />
+            </Principal>
+            <Dependent Role="setValues">
+              <PropertyRef Name="settingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_userSetValues_setValues">
+          <End Role="setValues" Type="Self.setValues" Multiplicity="0..1" />
+          <End Role="userSetValues" Type="Self.userSetValues" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="setValues">
+              <PropertyRef Name="valId" />
+            </Principal>
+            <Dependent Role="userSetValues">
+              <PropertyRef Name="valId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="bookModelStoreContainer">
+          <EntitySet Name="customerserials" EntityType="Self.customerserials" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="error" EntityType="Self.error" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="office" EntityType="Self.office" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="setting" EntityType="Self.setting" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="setValues" EntityType="Self.setValues" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="users" EntityType="Self.users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="userSetValues" EntityType="Self.userSetValues" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="customers" EntityType="Self.customers" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [customers].[custId] AS [custId], 
+    [customers].[custname] AS [custname], 
+    [customers].[lastName] AS [lastName], 
+    [customers].[company] AS [company], 
+    [customers].[email] AS [email], 
+    [customers].[phone] AS [phone], 
+    [customers].[mobile] AS [mobile], 
+    [customers].[fax] AS [fax], 
+    [customers].[address] AS [address], 
+    [customers].[custlevel] AS [custlevel], 
+    [customers].[createDate] AS [createDate], 
+    [customers].[updateDate] AS [updateDate], 
+    [customers].[custCode] AS [custCode], 
+    [customers].[image] AS [image], 
+    [customers].[notes] AS [notes], 
+    [customers].[balance] AS [balance], 
+    [customers].[balanceType] AS [balanceType], 
+    [customers].[createUserId] AS [createUserId], 
+    [customers].[updateUserId] AS [updateUserId], 
+    [customers].[isActive] AS [isActive], 
+    [customers].[countryId] AS [countryId]
+    FROM [dbo].[customers] AS [customers]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_customers_users" Association="Self.FK_customers_users">
+            <End Role="users" EntitySet="users" />
+            <End Role="customers" EntitySet="customers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_customers_users1" Association="Self.FK_customers_users1">
+            <End Role="users" EntitySet="users" />
+            <End Role="customers" EntitySet="customers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_customerserials_users" Association="Self.FK_customerserials_users">
+            <End Role="users" EntitySet="users" />
+            <End Role="customerserials" EntitySet="customerserials" />
+          </AssociationSet>
+          <AssociationSet Name="FK_customerserials_users1" Association="Self.FK_customerserials_users1">
+            <End Role="users" EntitySet="users" />
+            <End Role="customerserials" EntitySet="customerserials" />
+          </AssociationSet>
+          <AssociationSet Name="FK_error_users" Association="Self.FK_error_users">
+            <End Role="users" EntitySet="users" />
+            <End Role="error" EntitySet="error" />
+          </AssociationSet>
+          <AssociationSet Name="FK_office_users" Association="Self.FK_office_users">
+            <End Role="users" EntitySet="users" />
+            <End Role="office" EntitySet="office" />
+          </AssociationSet>
+          <AssociationSet Name="FK_office_users1" Association="Self.FK_office_users1">
+            <End Role="users" EntitySet="users" />
+            <End Role="office" EntitySet="office" />
+          </AssociationSet>
+          <AssociationSet Name="FK_setValues_setting" Association="Self.FK_setValues_setting">
+            <End Role="setting" EntitySet="setting" />
+            <End Role="setValues" EntitySet="setValues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_userSetValues_setValues" Association="Self.FK_userSetValues_setValues">
+            <End Role="setValues" EntitySet="setValues" />
+            <End Role="userSetValues" EntitySet="userSetValues" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="bookModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="customerserials">
+          <Key>
+            <PropertyRef Name="customerSerialId" />
+          </Key>
+          <Property Name="customerSerialId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="serial" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="officeName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Number" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="customerHardCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="activateCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="startDate" Type="DateTime" Precision="7" />
+          <Property Name="expireDate" Type="DateTime" Precision="7" />
+          <Property Name="yearCount" Type="Int32" Nullable="false" />
+          <Property Name="bookDate" Type="DateTime" Precision="7" />
+          <Property Name="confirmStat" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="notes" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="createDate" Type="DateTime" Precision="7" />
+          <Property Name="updateDate" Type="DateTime" Precision="7" />
+          <Property Name="createUserId" Type="Int32" />
+          <Property Name="updateUserId" Type="Int32" />
+          <Property Name="isActive" Type="Int32" />
+          <Property Name="type" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="activatedate" Type="DateTime" Precision="7" />
+          <Property Name="isProgramActivated" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="users" Relationship="Self.FK_customerserials_users" FromRole="customerserials" ToRole="users" />
+          <NavigationProperty Name="users1" Relationship="Self.FK_customerserials_users1" FromRole="customerserials" ToRole="users" />
+        </EntityType>
+        <EntityType Name="error">
+          <Key>
+            <PropertyRef Name="errorId" />
+          </Key>
+          <Property Name="errorId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="num" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="msg" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="stackTrace" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="targetSite" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="createDate" Type="DateTime" Precision="7" />
+          <Property Name="createUserId" Type="Int32" />
+          <NavigationProperty Name="users" Relationship="Self.FK_error_users" FromRole="error" ToRole="users" />
+        </EntityType>
+        <EntityType Name="office">
+          <Key>
+            <PropertyRef Name="officeId" />
+          </Key>
+          <Property Name="officeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="agentName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="joinDate" Type="DateTime" Precision="7" />
+          <Property Name="mobile" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="userName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="passwordSY" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="PasswordSoto" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="createDate" Type="DateTime" Precision="7" />
+          <Property Name="updateDate" Type="DateTime" Precision="7" />
+          <Property Name="createUserId" Type="Int32" />
+          <Property Name="updateUserId" Type="Int32" />
+          <Property Name="isActive" Type="Boolean" />
+          <Property Name="balance" Type="Decimal" Precision="20" Scale="3" />
+          <Property Name="commission_ratio" Type="Decimal" Precision="20" Scale="3" />
+          <Property Name="code" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="users" Relationship="Self.FK_office_users" FromRole="office" ToRole="users" />
+          <NavigationProperty Name="users1" Relationship="Self.FK_office_users1" FromRole="office" ToRole="users" />
+        </EntityType>
+        <EntityType Name="setting">
+          <Key>
+            <PropertyRef Name="settingId" />
+          </Key>
+          <Property Name="settingId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="setValues" Relationship="Self.FK_setValues_setting" FromRole="setting" ToRole="setValues" />
+        </EntityType>
+        <EntityType Name="setValues">
+          <Key>
+            <PropertyRef Name="valId" />
+          </Key>
+          <Property Name="valId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="isDefault" Type="Int32" Nullable="false" />
+          <Property Name="isSystem" Type="Int32" Nullable="false" />
+          <Property Name="notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="settingId" Type="Int32" />
+          <NavigationProperty Name="setting" Relationship="Self.FK_setValues_setting" FromRole="setValues" ToRole="setting" />
+          <NavigationProperty Name="userSetValues" Relationship="Self.FK_userSetValues_setValues" FromRole="setValues" ToRole="userSetValues" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="users">
+          <Key>
+            <PropertyRef Name="userId" />
+          </Key>
+          <Property Name="userId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AccountName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="lastName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="company" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="email" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="phone" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="mobile" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="fax" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="address" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="agentLevel" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="createDate" Type="DateTime" Precision="7" />
+          <Property Name="updateDate" Type="DateTime" Precision="7" />
+          <Property Name="password" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="type" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="image" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="notes" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="balance" Type="Decimal" Precision="20" Scale="3" Nullable="false" />
+          <Property Name="createUserId" Type="Int32" />
+          <Property Name="updateUserId" Type="Int32" />
+          <Property Name="isActive" Type="Boolean" />
+          <Property Name="code" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="isAdmin" Type="Boolean" />
+          <Property Name="groupId" Type="Int32" />
+          <Property Name="balanceType" Type="Byte" />
+          <Property Name="job" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="isOnline" Type="Byte" />
+          <Property Name="countryId" Type="Int32" />
+          <NavigationProperty Name="customerserials" Relationship="Self.FK_customerserials_users" FromRole="users" ToRole="customerserials" />
+          <NavigationProperty Name="customerserials1" Relationship="Self.FK_customerserials_users1" FromRole="users" ToRole="customerserials" />
+          <NavigationProperty Name="error" Relationship="Self.FK_error_users" FromRole="users" ToRole="error" />
+          <NavigationProperty Name="office" Relationship="Self.FK_office_users" FromRole="users" ToRole="office" />
+          <NavigationProperty Name="office1" Relationship="Self.FK_office_users1" FromRole="users" ToRole="office" />
+          <NavigationProperty Name="customers" Relationship="Self.FK_customers_users" FromRole="users" ToRole="customers" />
+          <NavigationProperty Name="customers1" Relationship="Self.FK_customers_users1" FromRole="users" ToRole="customers" />
+        </EntityType>
+        <EntityType Name="userSetValues">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="userId" Type="Int32" />
+          <Property Name="valId" Type="Int32" />
+          <Property Name="note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="createDate" Type="DateTime" Precision="7" />
+          <Property Name="updateDate" Type="DateTime" Precision="7" />
+          <Property Name="createUserId" Type="Int32" />
+          <Property Name="updateUserId" Type="Int32" />
+          <NavigationProperty Name="setValues" Relationship="Self.FK_userSetValues_setValues" FromRole="userSetValues" ToRole="setValues" />
+        </EntityType>
+        <EntityType Name="customers">
+          <Key>
+            <PropertyRef Name="custId" />
+            <PropertyRef Name="custname" />
+            <PropertyRef Name="balance" />
+            <PropertyRef Name="balanceType" />
+          </Key>
+          <Property Name="custId" Type="Int32" Nullable="false" />
+          <Property Name="custname" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="lastName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="company" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="email" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="phone" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="mobile" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="fax" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="address" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="custlevel" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="createDate" Type="DateTime" Precision="7" />
+          <Property Name="updateDate" Type="DateTime" Precision="7" />
+          <Property Name="custCode" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="image" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="notes" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="balance" Type="Decimal" Precision="20" Scale="3" Nullable="false" />
+          <Property Name="balanceType" Type="Byte" Nullable="false" />
+          <Property Name="createUserId" Type="Int32" />
+          <Property Name="updateUserId" Type="Int32" />
+          <Property Name="isActive" Type="Int32" />
+          <Property Name="countryId" Type="Int32" />
+          <NavigationProperty Name="users" Relationship="Self.FK_customers_users" FromRole="customers" ToRole="users" />
+          <NavigationProperty Name="users1" Relationship="Self.FK_customers_users1" FromRole="customers" ToRole="users" />
+        </EntityType>
+        <Association Name="FK_customerserials_users">
+          <End Role="users" Type="Self.users" Multiplicity="0..1" />
+          <End Role="customerserials" Type="Self.customerserials" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="userId" />
+            </Principal>
+            <Dependent Role="customerserials">
+              <PropertyRef Name="createUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_customerserials_users1">
+          <End Role="users" Type="Self.users" Multiplicity="0..1" />
+          <End Role="customerserials" Type="Self.customerserials" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="userId" />
+            </Principal>
+            <Dependent Role="customerserials">
+              <PropertyRef Name="updateUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_error_users">
+          <End Role="users" Type="Self.users" Multiplicity="0..1" />
+          <End Role="error" Type="Self.error" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="userId" />
+            </Principal>
+            <Dependent Role="error">
+              <PropertyRef Name="createUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_office_users">
+          <End Role="users" Type="Self.users" Multiplicity="0..1" />
+          <End Role="office" Type="Self.office" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="userId" />
+            </Principal>
+            <Dependent Role="office">
+              <PropertyRef Name="createUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_office_users1">
+          <End Role="users" Type="Self.users" Multiplicity="0..1" />
+          <End Role="office" Type="Self.office" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="userId" />
+            </Principal>
+            <Dependent Role="office">
+              <PropertyRef Name="updateUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_setValues_setting">
+          <End Role="setting" Type="Self.setting" Multiplicity="0..1" />
+          <End Role="setValues" Type="Self.setValues" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="setting">
+              <PropertyRef Name="settingId" />
+            </Principal>
+            <Dependent Role="setValues">
+              <PropertyRef Name="settingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_userSetValues_setValues">
+          <End Role="setValues" Type="Self.setValues" Multiplicity="0..1" />
+          <End Role="userSetValues" Type="Self.userSetValues" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="setValues">
+              <PropertyRef Name="valId" />
+            </Principal>
+            <Dependent Role="userSetValues">
+              <PropertyRef Name="valId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_customers_users">
+          <End Role="users" Type="Self.users" Multiplicity="0..1" />
+          <End Role="customers" Type="Self.customers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="userId" />
+            </Principal>
+            <Dependent Role="customers">
+              <PropertyRef Name="createUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_customers_users1">
+          <End Role="users" Type="Self.users" Multiplicity="0..1" />
+          <End Role="customers" Type="Self.customers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="userId" />
+            </Principal>
+            <Dependent Role="customers">
+              <PropertyRef Name="updateUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="bookdbEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="customerserials" EntityType="Self.customerserials" />
+          <EntitySet Name="error" EntityType="Self.error" />
+          <EntitySet Name="office" EntityType="Self.office" />
+          <EntitySet Name="setting" EntityType="Self.setting" />
+          <EntitySet Name="setValues" EntityType="Self.setValues" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="users" EntityType="Self.users" />
+          <EntitySet Name="userSetValues" EntityType="Self.userSetValues" />
+          <EntitySet Name="customers" EntityType="Self.customers" />
+          <AssociationSet Name="FK_customerserials_users" Association="Self.FK_customerserials_users">
+            <End Role="users" EntitySet="users" />
+            <End Role="customerserials" EntitySet="customerserials" />
+          </AssociationSet>
+          <AssociationSet Name="FK_customerserials_users1" Association="Self.FK_customerserials_users1">
+            <End Role="users" EntitySet="users" />
+            <End Role="customerserials" EntitySet="customerserials" />
+          </AssociationSet>
+          <AssociationSet Name="FK_error_users" Association="Self.FK_error_users">
+            <End Role="users" EntitySet="users" />
+            <End Role="error" EntitySet="error" />
+          </AssociationSet>
+          <AssociationSet Name="FK_office_users" Association="Self.FK_office_users">
+            <End Role="users" EntitySet="users" />
+            <End Role="office" EntitySet="office" />
+          </AssociationSet>
+          <AssociationSet Name="FK_office_users1" Association="Self.FK_office_users1">
+            <End Role="users" EntitySet="users" />
+            <End Role="office" EntitySet="office" />
+          </AssociationSet>
+          <AssociationSet Name="FK_setValues_setting" Association="Self.FK_setValues_setting">
+            <End Role="setting" EntitySet="setting" />
+            <End Role="setValues" EntitySet="setValues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_userSetValues_setValues" Association="Self.FK_userSetValues_setValues">
+            <End Role="setValues" EntitySet="setValues" />
+            <End Role="userSetValues" EntitySet="userSetValues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_customers_users" Association="Self.FK_customers_users">
+            <End Role="users" EntitySet="users" />
+            <End Role="customers" EntitySet="customers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_customers_users1" Association="Self.FK_customers_users1">
+            <End Role="users" EntitySet="users" />
+            <End Role="customers" EntitySet="customers" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="bookModelStoreContainer" CdmEntityContainer="bookdbEntities">
+          <EntitySetMapping Name="customerserials">
+            <EntityTypeMapping TypeName="bookModel.customerserials">
+              <MappingFragment StoreEntitySet="customerserials">
+                <ScalarProperty Name="customerSerialId" ColumnName="customerSerialId" />
+                <ScalarProperty Name="serial" ColumnName="serial" />
+                <ScalarProperty Name="officeName" ColumnName="officeName" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="customerHardCode" ColumnName="customerHardCode" />
+                <ScalarProperty Name="activateCode" ColumnName="activateCode" />
+                <ScalarProperty Name="startDate" ColumnName="startDate" />
+                <ScalarProperty Name="expireDate" ColumnName="expireDate" />
+                <ScalarProperty Name="yearCount" ColumnName="yearCount" />
+                <ScalarProperty Name="bookDate" ColumnName="bookDate" />
+                <ScalarProperty Name="confirmStat" ColumnName="confirmStat" />
+                <ScalarProperty Name="notes" ColumnName="notes" />
+                <ScalarProperty Name="createDate" ColumnName="createDate" />
+                <ScalarProperty Name="updateDate" ColumnName="updateDate" />
+                <ScalarProperty Name="createUserId" ColumnName="createUserId" />
+                <ScalarProperty Name="updateUserId" ColumnName="updateUserId" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="type" ColumnName="type" />
+                <ScalarProperty Name="activatedate" ColumnName="activatedate" />
+                <ScalarProperty Name="isProgramActivated" ColumnName="isProgramActivated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="error">
+            <EntityTypeMapping TypeName="bookModel.error">
+              <MappingFragment StoreEntitySet="error">
+                <ScalarProperty Name="errorId" ColumnName="errorId" />
+                <ScalarProperty Name="num" ColumnName="num" />
+                <ScalarProperty Name="msg" ColumnName="msg" />
+                <ScalarProperty Name="stackTrace" ColumnName="stackTrace" />
+                <ScalarProperty Name="targetSite" ColumnName="targetSite" />
+                <ScalarProperty Name="createDate" ColumnName="createDate" />
+                <ScalarProperty Name="createUserId" ColumnName="createUserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="office">
+            <EntityTypeMapping TypeName="bookModel.office">
+              <MappingFragment StoreEntitySet="office">
+                <ScalarProperty Name="officeId" ColumnName="officeId" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="agentName" ColumnName="agentName" />
+                <ScalarProperty Name="joinDate" ColumnName="joinDate" />
+                <ScalarProperty Name="mobile" ColumnName="mobile" />
+                <ScalarProperty Name="address" ColumnName="address" />
+                <ScalarProperty Name="userName" ColumnName="userName" />
+                <ScalarProperty Name="passwordSY" ColumnName="passwordSY" />
+                <ScalarProperty Name="PasswordSoto" ColumnName="PasswordSoto" />
+                <ScalarProperty Name="notes" ColumnName="notes" />
+                <ScalarProperty Name="createDate" ColumnName="createDate" />
+                <ScalarProperty Name="updateDate" ColumnName="updateDate" />
+                <ScalarProperty Name="createUserId" ColumnName="createUserId" />
+                <ScalarProperty Name="updateUserId" ColumnName="updateUserId" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="balance" ColumnName="balance" />
+                <ScalarProperty Name="commission_ratio" ColumnName="commission_ratio" />
+                <ScalarProperty Name="code" ColumnName="code" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="setting">
+            <EntityTypeMapping TypeName="bookModel.setting">
+              <MappingFragment StoreEntitySet="setting">
+                <ScalarProperty Name="settingId" ColumnName="settingId" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="notes" ColumnName="notes" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="setValues">
+            <EntityTypeMapping TypeName="bookModel.setValues">
+              <MappingFragment StoreEntitySet="setValues">
+                <ScalarProperty Name="valId" ColumnName="valId" />
+                <ScalarProperty Name="value" ColumnName="value" />
+                <ScalarProperty Name="isDefault" ColumnName="isDefault" />
+                <ScalarProperty Name="isSystem" ColumnName="isSystem" />
+                <ScalarProperty Name="notes" ColumnName="notes" />
+                <ScalarProperty Name="settingId" ColumnName="settingId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="bookModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="users">
+            <EntityTypeMapping TypeName="bookModel.users">
+              <MappingFragment StoreEntitySet="users">
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="AccountName" ColumnName="AccountName" />
+                <ScalarProperty Name="lastName" ColumnName="lastName" />
+                <ScalarProperty Name="company" ColumnName="company" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="mobile" ColumnName="mobile" />
+                <ScalarProperty Name="fax" ColumnName="fax" />
+                <ScalarProperty Name="address" ColumnName="address" />
+                <ScalarProperty Name="agentLevel" ColumnName="agentLevel" />
+                <ScalarProperty Name="createDate" ColumnName="createDate" />
+                <ScalarProperty Name="updateDate" ColumnName="updateDate" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="type" ColumnName="type" />
+                <ScalarProperty Name="image" ColumnName="image" />
+                <ScalarProperty Name="notes" ColumnName="notes" />
+                <ScalarProperty Name="balance" ColumnName="balance" />
+                <ScalarProperty Name="createUserId" ColumnName="createUserId" />
+                <ScalarProperty Name="updateUserId" ColumnName="updateUserId" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="code" ColumnName="code" />
+                <ScalarProperty Name="isAdmin" ColumnName="isAdmin" />
+                <ScalarProperty Name="groupId" ColumnName="groupId" />
+                <ScalarProperty Name="balanceType" ColumnName="balanceType" />
+                <ScalarProperty Name="job" ColumnName="job" />
+                <ScalarProperty Name="isOnline" ColumnName="isOnline" />
+                <ScalarProperty Name="countryId" ColumnName="countryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="userSetValues">
+            <EntityTypeMapping TypeName="bookModel.userSetValues">
+              <MappingFragment StoreEntitySet="userSetValues">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="valId" ColumnName="valId" />
+                <ScalarProperty Name="note" ColumnName="note" />
+                <ScalarProperty Name="createDate" ColumnName="createDate" />
+                <ScalarProperty Name="updateDate" ColumnName="updateDate" />
+                <ScalarProperty Name="createUserId" ColumnName="createUserId" />
+                <ScalarProperty Name="updateUserId" ColumnName="updateUserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="customers">
+            <EntityTypeMapping TypeName="bookModel.customers">
+              <MappingFragment StoreEntitySet="customers">
+                <ScalarProperty Name="custId" ColumnName="custId" />
+                <ScalarProperty Name="custname" ColumnName="custname" />
+                <ScalarProperty Name="lastName" ColumnName="lastName" />
+                <ScalarProperty Name="company" ColumnName="company" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="mobile" ColumnName="mobile" />
+                <ScalarProperty Name="fax" ColumnName="fax" />
+                <ScalarProperty Name="address" ColumnName="address" />
+                <ScalarProperty Name="custlevel" ColumnName="custlevel" />
+                <ScalarProperty Name="createDate" ColumnName="createDate" />
+                <ScalarProperty Name="updateDate" ColumnName="updateDate" />
+                <ScalarProperty Name="custCode" ColumnName="custCode" />
+                <ScalarProperty Name="image" ColumnName="image" />
+                <ScalarProperty Name="notes" ColumnName="notes" />
+                <ScalarProperty Name="balance" ColumnName="balance" />
+                <ScalarProperty Name="balanceType" ColumnName="balanceType" />
+                <ScalarProperty Name="createUserId" ColumnName="createUserId" />
+                <ScalarProperty Name="updateUserId" ColumnName="updateUserId" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="countryId" ColumnName="countryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="0e1233b909e4499d8f62facf2f011054" Name="Diagram1">
+        <EntityTypeShape EntityType="bookModel.customerserials" Width="1.5" PointX="3" PointY="5.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="bookModel.error" Width="1.5" PointX="3" PointY="1.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="bookModel.office" Width="1.5" PointX="3" PointY="11.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="bookModel.setting" Width="1.5" PointX="5.75" PointY="1.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="bookModel.setValues" Width="1.5" PointX="8" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="bookModel.sysdiagrams" Width="1.5" PointX="5.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="bookModel.users" Width="1.5" PointX="0.75" PointY="8.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="bookModel.userSetValues" Width="1.5" PointX="10.25" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="bookModel.customers" Width="1.5" PointX="3" PointY="16.75" IsExpanded="true" />
+        <AssociationConnector Association="bookModel.FK_customerserials_users" ManuallyRouted="false" />
+        <AssociationConnector Association="bookModel.FK_customerserials_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="bookModel.FK_error_users" ManuallyRouted="false" />
+        <AssociationConnector Association="bookModel.FK_office_users" ManuallyRouted="false" />
+        <AssociationConnector Association="bookModel.FK_office_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="bookModel.FK_setValues_setting" ManuallyRouted="false" />
+        <AssociationConnector Association="bookModel.FK_userSetValues_setValues" ManuallyRouted="false" />
+        <AssociationConnector Association="bookModel.FK_customers_users" ManuallyRouted="false" />
+        <AssociationConnector Association="bookModel.FK_customers_users1" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
