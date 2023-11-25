@@ -23,7 +23,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Reporting.WinForms;
-
+using Newtonsoft.Json;
 
 namespace SerialGenerator.View.sectionData
 {
@@ -63,6 +63,8 @@ namespace SerialGenerator.View.sectionData
         SaveFileDialog saveFileDialog = new SaveFileDialog();
         OpenFileDialog openFileDialog = new OpenFileDialog();
         public static List<string> requiredControlList;
+        ReportCls repcls = new ReportCls();
+        ActivateModel activeModel = new ActivateModel();
         private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {//load
             try
@@ -212,34 +214,16 @@ namespace SerialGenerator.View.sectionData
                 {
                     if (HelpClass.validate(requiredControlList, this))
                     {
-                        customerSerialsModel.officeName = tb_officename.Text;
-                        customerSerialsModel.startDate = dp_startDate.SelectedDate;
-                        customerSerialsModel.yearCount = Convert.ToInt32(cb_years.SelectedValue); ;
-                        customerSerialsModel.customerHardCode = string.IsNullOrEmpty(tb_customerCode.Text) ? "" : tb_customerCode.Text.Trim();
-                        //customerSerialsModel.activateCode = tb_activeCode.Text;
-                        customerSerialsModel.isActive = 1;
-                        
-                        customerSerialsModel.updateUserId = MainWindow.userLogin.userId;
-                        // calculate
-                        customerSerialsModel.expireDate = customerSerialsModel.startDate.Value.AddYears(customerSerialsModel.yearCount);
-                        if (string.IsNullOrEmpty(customerSerialsModel.customerHardCode))
-                        {
-                            customerSerialsModel.confirmStat = "waithard";
-                        }
-                        else if (string.IsNullOrEmpty(customerSerialsModel.activateCode))
-                        {
-                            customerSerialsModel.confirmStat = "notgen";
-                        }
-                        else
-                        {
-                            customerSerialsModel.confirmStat = "gen";
-                        }
+                        refreshModel();
+                         
+                       customerSerialsModel.activateCode = generatecode();
 
                         decimal s = await customerSerialsModel.Save(customerSerialsModel);
                         if (s <= 0)
                             Toaster.ShowWarning(Window.GetWindow(this), message: MainWindow.resourcemanager.GetString("trPopError"), animation: ToasterAnimation.FadeIn);
                         else
                         {
+                            
                             Toaster.ShowSuccess(Window.GetWindow(this), message: MainWindow.resourcemanager.GetString("trPopUpdate"), animation: ToasterAnimation.FadeIn);
                     await RefreshOfficesList();
                             await Search();
@@ -422,7 +406,7 @@ namespace SerialGenerator.View.sectionData
                     this.DataContext = customerSerialsModel;
                     if (customerSerialsModel != null)
                     {
-                        
+                        tb_activeCode.Text = customerSerialsModel.activateCode;
                       //  cb_years.SelectedValue = customerSerialsModel.yearCount;
                         #region delete
                         if (customerSerialsModel.canDelete)
@@ -510,8 +494,9 @@ namespace SerialGenerator.View.sectionData
         void Clear()
         {
             this.DataContext = new CustomerSerials();
-
-
+            customerSerialsModel = new CustomerSerials();
+            btn_generatecode.IsEnabled = false;
+            tb_activeCode.Text = "";
             // last 
             HelpClass.clearValidate(requiredControlList, this);
         }
@@ -895,6 +880,150 @@ namespace SerialGenerator.View.sectionData
             //        HelpClass.EndAwait(grid_main);
             //    HelpClass.ExceptionMessage(ex, this);
             //}
+        }
+
+        private async void Btn_generatecode_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (sender != null)
+                    HelpClass.StartAwait(grid_main);
+                if (customerSerialsModel.customerSerialId > 0 && !string.IsNullOrEmpty(customerSerialsModel.customerHardCode))
+                {
+                    //string encodekey = "";
+                    //activeModel = new ActivateModel();
+                    //activeModel.confirmStat = customerSerialsModel.confirmStat;
+                    //activeModel.customerHardCode = customerSerialsModel.customerHardCode;
+                    //activeModel.expireDate = customerSerialsModel.expireDate;
+                    //activeModel.officeName = customerSerialsModel.officeName;
+                    //activeModel.startDate = customerSerialsModel.startDate;
+                    //activeModel.yearCount = customerSerialsModel.yearCount;
+                    //////
+
+                    //string orginalkey = JsonConvert.SerializeObject(activeModel);
+                    //string orginalkeyencripted = ReportCls.FinalEncode(orginalkey);
+
+
+                    refreshModel();
+                   
+                    customerSerialsModel.activateCode = generatecode();
+                    decimal s = await customerSerialsModel.Save(customerSerialsModel);
+
+                    await RefreshOfficesList();
+                    await Search();
+                    //decode
+
+                    string orginalkeydec = ReportCls.FinalDecode(tb_activeCode.Text);
+                    ActivateModel activemodret = JsonConvert.DeserializeObject<ActivateModel>(orginalkeydec, new JsonSerializerSettings { DateParseHandling = DateParseHandling.None });
+
+                 //   ActivateModel activemodret = JsonConvert.DeserializeObject<ActivateModel>(orginalkeydec);
+
+                }
+                else
+                {
+
+                    Toaster.ShowWarning(Window.GetWindow(this), message: MainWindow.resourcemanager.GetString("trSelectItemFirst"), animation: ToasterAnimation.FadeIn);
+
+                }
+
+                if (sender != null)
+                    HelpClass.EndAwait(grid_main);
+            }
+            catch (Exception ex)
+            {
+                Window.GetWindow(this).Opacity = 1;
+                if (sender != null)
+                    HelpClass.EndAwait(grid_main);
+                HelpClass.ExceptionMessage(ex, this);
+            }
+        }
+
+        public   string generatecode( )
+        {
+            try
+            {
+                if (customerSerialsModel.customerSerialId > 0 && !string.IsNullOrEmpty(customerSerialsModel.customerHardCode))
+                {
+                   
+                    activeModel = new ActivateModel();
+                    activeModel.confirmStat = customerSerialsModel.confirmStat;
+                    activeModel.customerHardCode = customerSerialsModel.customerHardCode;
+                    activeModel.expireDate = customerSerialsModel.expireDate;
+                    activeModel.officeName = customerSerialsModel.officeName;
+                    activeModel.startDate = customerSerialsModel.startDate;
+                    activeModel.yearCount = customerSerialsModel.yearCount;
+                    //
+
+                    string orginalkey = JsonConvert.SerializeObject(activeModel);
+                    string orginalkeyencripted = ReportCls.FinalEncode(orginalkey);// orginalkey
+                    tb_activeCode.Text = orginalkeyencripted;
+                    return orginalkeyencripted;
+                }
+                else
+                {
+                    tb_activeCode.Text = "";
+                    return null;
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public void refreshModel()
+        {
+            
+                if (customerSerialsModel.customerSerialId > 0)
+                {
+                    if (HelpClass.validate(requiredControlList, this))
+                    {
+                        customerSerialsModel.officeName = tb_officename.Text;
+                        customerSerialsModel.startDate = dp_startDate.SelectedDate;
+                        customerSerialsModel.yearCount = Convert.ToInt32(cb_years.SelectedValue);
+                        customerSerialsModel.customerHardCode = string.IsNullOrEmpty(tb_customerCode.Text) ? "" : tb_customerCode.Text.Trim();
+
+                        customerSerialsModel.isActive = 1;
+
+                        customerSerialsModel.updateUserId = MainWindow.userLogin.userId;
+                        // calculate
+                        customerSerialsModel.expireDate = customerSerialsModel.startDate.Value.AddYears(customerSerialsModel.yearCount);
+                        if (string.IsNullOrEmpty(customerSerialsModel.customerHardCode))
+                        {
+                            customerSerialsModel.confirmStat = "waithard";
+                        }
+                        else if (string.IsNullOrEmpty(customerSerialsModel.activateCode))
+                        {
+                            customerSerialsModel.confirmStat = "notgen";
+                        }
+                        else
+                        {
+                            customerSerialsModel.confirmStat = "gen";
+                        }
+                    }
+                }
+                    
+        }
+
+        private void Tb_customerCode_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                HelpClass.validate(requiredControlList, this);
+                if (!(string.IsNullOrEmpty(tb_customerCode.Text)|| customerSerialsModel.customerSerialId<=0))
+                {
+                    btn_generatecode.IsEnabled = true;
+                }
+                else
+                {
+                    btn_generatecode.IsEnabled = false;
+                }
+               
+            }
+            catch (Exception ex)
+            {
+                HelpClass.ExceptionMessage(ex, this);
+            }
         }
     }
 }

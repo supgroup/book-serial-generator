@@ -17,7 +17,21 @@ using Newtonsoft.Json.Converters;
 
 namespace SerialGenerator.ApiClasses
 {
-    public class CustomerSerials
+
+    public class ActivateModel
+    {
+
+        public string officeName { get; set; }
+        public string customerHardCode { get; set; }
+    
+        public Nullable<System.DateTime> startDate { get; set; }
+        public Nullable<System.DateTime> expireDate { get; set; }
+        public int yearCount { get; set; }
+      
+        public string confirmStat { get; set; }
+       
+    }
+        public class CustomerSerials
     {
         public int customerSerialId { get; set; }
         public string serial { get; set; }
@@ -42,6 +56,7 @@ namespace SerialGenerator.ApiClasses
         public bool canDelete { get; set; }
         public string strstartDate { get; set; }
         public string strexpireDate { get; set; }
+
 
         /// <summary>
         /// ///////////////////////////////////////

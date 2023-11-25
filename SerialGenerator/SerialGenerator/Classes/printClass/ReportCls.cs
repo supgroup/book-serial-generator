@@ -1007,7 +1007,7 @@ namespace SerialGenerator.Classes
         public static string Encrypt(string Text)
         {
             byte[] b = ConvertToBytes(Text);
-            b = Encrypt(b);
+            b = Encryptcode(b);
             return ConvertToText(b);
         }
         private static byte[] ConvertToBytes(string text)
@@ -1037,6 +1037,9 @@ namespace SerialGenerator.Classes
 
         }
 
+     
+
+
 
         public static byte[] Encrypt(byte[] ordinary)
         {
@@ -1051,8 +1054,54 @@ namespace SerialGenerator.Classes
             encr.CopyTo(b, 0);
             return b;
         }
+        public static byte[] Encryptcode(byte[] ordinary)
+        {
+            BitArray bits = ToBits(ordinary);
+            bits = bits.Not();
+            byte[] b = new byte[bits.Length / 8];
+            bits.CopyTo(b, 0);
 
+            // BitArray LHH = SubBits(bits, 0, bits.Length / 2);
+            // BitArray RHH = SubBits(bits, bits.Length / 2, bits.Length / 2);
+            // BitArray XorH = LHH.Xor(RHH);
+            // RHH = RHH.Not();
+            // XorH = XorH.Not();
+            // BitArray encr = ConcateBits(XorH, RHH);
+            //// byte[] b = new byte[encr.Length / 8];
+            // encr.CopyTo(b, 0);
+            return b;
+        }
+        public static byte[] Decrypt(byte[] Encrypted)
+        {
+            BitArray enc = ToBits(Encrypted);
+            BitArray XorH = SubBits(enc, 0, enc.Length / 2);
+            XorH = XorH.Not();
+            BitArray RHH = SubBits(enc, enc.Length / 2, enc.Length / 2);
+            RHH = RHH.Not();
+            BitArray LHH = XorH.Xor(RHH);
+            BitArray bits = ConcateBits(LHH, RHH);
+            byte[] decr = new byte[bits.Length / 8];
+            bits.CopyTo(decr, 0);
+            return decr;
+        }
+        public static byte[] Decryptcode(byte[] Encrypted)
+        {
+            BitArray enc = ToBits(Encrypted);
 
+            enc = enc.Not();
+            byte[] decr = new byte[enc.Length / 8];
+            enc.CopyTo(decr, 0);
+
+            //BitArray XorH = SubBits(enc, 0, enc.Length / 2);
+            //XorH = XorH.Not();
+            //BitArray RHH = SubBits(enc, enc.Length / 2, enc.Length / 2);
+            //RHH = RHH.Not();
+            //BitArray LHH = XorH.Xor(RHH);
+            //BitArray bits = ConcateBits(LHH, RHH);
+            //byte[] decr = new byte[bits.Length / 8];
+            //bits.CopyTo(decr, 0);
+            return decr;
+        }
         private static BitArray ToBits(byte[] Bytes)
         {
             BitArray bits = new BitArray(Bytes);
@@ -1112,31 +1161,27 @@ namespace SerialGenerator.Classes
 
             return false;
         }
-        public static byte[] Decrypt(byte[] Encrypted)
-        {
-            BitArray enc = ToBits(Encrypted);
-            BitArray XorH = SubBits(enc, 0, enc.Length / 2);
-            XorH = XorH.Not();
-            BitArray RHH = SubBits(enc, enc.Length / 2, enc.Length / 2);
-            RHH = RHH.Not();
-            BitArray LHH = XorH.Xor(RHH);
-            BitArray bits = ConcateBits(LHH, RHH);
-            byte[] decr = new byte[bits.Length / 8];
-            bits.CopyTo(decr, 0);
-            return decr;
-        }
+     
         public static string Decrypt(string EncryptedText)
         {
             byte[] b = ConvertToBytes(EncryptedText);
-            b = Decrypt(b);
+            b = Decryptcode(b);
             return ConvertToText(b);
         }
         public static string DeCompressThenDecrypt(string text)
         {
             var bytes = Encoding.UTF8.GetBytes(text);
-            text = Encoding.UTF8.GetString(bytes);
+          //  text = Encoding.UTF8.GetString(bytes);
 
             return (Decrypt(text));
+        }
+        public static string EncryptThenCompress(string text)
+        {
+            string str1 = Encrypt(text);
+          
+            var bytes = Encoding.UTF8.GetBytes(str1);
+         //   return (Encoding.UTF8.GetString(bytes));
+            return str1;
         }
         //////////
         public bool decodefile(string Source, string DestPath)
@@ -1156,17 +1201,15 @@ namespace SerialGenerator.Classes
             }
         }
 
-        public static string decodetoString(string Source)
+  
+
+        public static string StringTobase64(string textstring)
         {
             try
             {
-                byte[] restorearr = File.ReadAllBytes(Source);
-
-                restorearr = Decrypt(restorearr);
-                return ConvertToText(restorearr);
-                // File.WriteAllBytes(DestPath, restorearr);
-
-
+                //from string to base64
+                string code = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(textstring));
+                return code;
             }
             catch
             {
@@ -1175,86 +1218,48 @@ namespace SerialGenerator.Classes
         }
 
 
-        public string currencyConverter(string currency)
-        {
-            if (!string.IsNullOrEmpty(currency))
-            {
-                
-                string s = "";
-                switch (currency)
-                {
-                    case "usd":
-                        s = "دولار امريكي";// "$";
-                        break;
-                    case "syp":
-                        s = "ليرة سورية"; //"SYP";
-                        break;
-                    default:
-                        s = "";
-                        break;
-                }
-                return s;
-            }
-            else return "";
-        }
-
-        public string flightTypeConverter(int? type)
-        {
-            if (type != null)
-            {
-                int intType = int.Parse(type.ToString());
-                string s = "";
-                switch (intType)
-                {
-                    case 1:
-                        s = MainWindow.resourcemanager.GetString("singleTrip");
-                        break;
-                    case 2:
-                        s = MainWindow.resourcemanager.GetString("roundTrip");
-                        break;
-
-                    default:
-                        s = "";
-                        break;
-                }
-
-                return s;
-            }
-            else return "";
-        }
-        //////////
-     
-     
-
-        
-        public string paySysConverter(string systemType)
+        public static string Base64ToString(string basestring)
         {
             try
-            {
-                string name = "";
-                if (!string.IsNullOrEmpty(systemType))
-                {
-                    switch (systemType)
-                    { 
-                        case "syr": name = MainWindow.resourcemanager.GetString("trnsyr"); break;
-                        case "soto": name = MainWindow.resourcemanager.GetString("trnsoto"); break;
-
-                        default: break;
-                    }
-                    return name;
-                }
-                else
-                {
-                    return "";
-                }
-              
+            {                
+                //from base64 to string
+                string code = (string)Encoding.UTF8.GetString(Convert.FromBase64String(basestring));
+                //
+                return code;
             }
             catch
             {
-                return "";
+                return "0";
             }
         }
 
+        public static string FinalEncode(string textvalue)
+        {
+            try
+            {
+                string encripted =  EncryptThenCompress(textvalue);
+                encripted = StringTobase64(encripted);
+                return encripted;
+            }
+            catch
+            {
+                return "0";
+            }
+        }
+
+        public static string FinalDecode(string textvalue)
+        {
+            try
+            {
+                  string Decripted = ReportCls.Base64ToString(textvalue);
+                 Decripted = ReportCls.DeCompressThenDecrypt(Decripted);
+                return Decripted;
+            }
+            catch
+            {
+                return "0";
+            }
+        }
 
     }
 }
