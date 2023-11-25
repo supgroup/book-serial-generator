@@ -128,22 +128,23 @@ namespace SerialGenerator.Classes
 
             rep.DataSources.Add(new ReportDataSource("DataSet", Query));
             //title
-            paramarr.Add(new ReportParameter("trTitle", MainWindow.resourcemanagerreport.GetString("trOffices")));
+            paramarr.Add(new ReportParameter("trTitle", MainWindow.resourcemanagerreport.GetString("activationcopy")));
             //table columns
             paramarr.Add(new ReportParameter("trNo", MainWindow.resourcemanagerreport.GetString("trNo.")));
             paramarr.Add(new ReportParameter("officeName", MainWindow.resourcemanagerreport.GetString("officeName")));
-            paramarr.Add(new ReportParameter("joinDate", MainWindow.resourcemanagerreport.GetString("joinDate")));
-            paramarr.Add(new ReportParameter("mobileNum", MainWindow.resourcemanagerreport.GetString("mobileNum")));
-            paramarr.Add(new ReportParameter("trUserName", MainWindow.resourcemanagerreport.GetString("trUserName")));
-            paramarr.Add(new ReportParameter("passwordSyr", MainWindow.resourcemanagerreport.GetString("passwordSyr")));
-            paramarr.Add(new ReportParameter("passwordSoto", MainWindow.resourcemanagerreport.GetString("passwordSoto")));
+            paramarr.Add(new ReportParameter("trStartDate", MainWindow.resourcemanagerreport.GetString("trStartDate")));
+            paramarr.Add(new ReportParameter("durationyear", MainWindow.resourcemanagerreport.GetString("durationyear")));
+            paramarr.Add(new ReportParameter("trEndTime", MainWindow.resourcemanagerreport.GetString("trEndTime")));
+            paramarr.Add(new ReportParameter("agentIdCode", MainWindow.resourcemanagerreport.GetString("agentIdCode")));
+         
 
             /*
-             * joinDate
-mobileNum
-trUserName
-passwordSyr
-passwordSoto
+             *  trNo
+officeName
+trStartDate
+durationyear
+trEndTime
+agentIdCode
 
              * */
             //DateFormConv(paramarr);

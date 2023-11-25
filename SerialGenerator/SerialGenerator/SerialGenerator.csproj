@@ -594,6 +594,7 @@
     <None Include="Properties\DataSources\Newtonsoft.Json.Serialization.ReflectionValueProvider.datasource" />
     <None Include="Properties\DataSources\Newtonsoft.Json.Serialization.SerializationCallback.datasource" />
     <None Include="Properties\DataSources\Newtonsoft.Json.Serialization.SerializationErrorCallback.datasource" />
+    <None Include="Properties\DataSources\SerialGenerator.ApiClasses.CustomerSerials.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

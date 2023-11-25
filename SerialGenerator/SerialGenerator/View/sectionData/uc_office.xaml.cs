@@ -462,10 +462,10 @@ namespace SerialGenerator.View.sectionData
             searchText = tb_search.Text.ToLower();
             customerSerialQuery = customerSerialList.Where(s =>
             (s.customerSerialId.ToString().Contains(searchText) ||
-            s.Number.ToLower().Contains(searchText) ||
+            s.Number.Contains(searchText) ||
             s.officeName.ToLower().Contains(searchText) ||
             s.startDate.ToString().Contains(searchText)
-            || s.customerHardCode.ToString().Contains(searchText)
+            || s.customerHardCode.ToLower().Contains(searchText)
             ||
             s.expireDate.ToString().Contains(searchText)
             || s.yearCount.ToString().Contains(searchText)
