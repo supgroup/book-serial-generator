@@ -913,10 +913,9 @@ namespace SerialGenerator.View.sectionData
                     await Search();
                     //decode
 
-                    string orginalkeydec = ReportCls.FinalDecode(tb_activeCode.Text);
-                    ActivateModel activemodret = JsonConvert.DeserializeObject<ActivateModel>(orginalkeydec, new JsonSerializerSettings { DateParseHandling = DateParseHandling.None });
-
-                 //   ActivateModel activemodret = JsonConvert.DeserializeObject<ActivateModel>(orginalkeydec);
+                    //string orginalkeydec = ReportCls.FinalDecode(tb_activeCode.Text);
+                    //ActivateModel activemodret = JsonConvert.DeserializeObject<ActivateModel>(orginalkeydec, new JsonSerializerSettings { DateParseHandling = DateParseHandling.None });
+ 
 
                 }
                 else

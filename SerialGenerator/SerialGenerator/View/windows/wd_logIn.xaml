@@ -157,12 +157,12 @@
             <Grid Grid.Column="1">
                 <Border x:Name="bdr_image" FlowDirection="LeftToRight"  CornerRadius="0,10,10,0">
                     <Border.Background>
-                        <ImageBrush x:Name="img_En"  Stretch="Fill"  ImageSource="/pic/programs-sales-login-bg.png"/>
+                        <ImageBrush x:Name="img_En"  Stretch="Fill"  ImageSource="/pic/programs-sales-login-bg.jpg"/>
                     </Border.Background>
                 </Border>
                 <Border Visibility="Hidden" x:Name="bdr_imageAr" FlowDirection="LeftToRight"  CornerRadius="10,0,0,10">
                     <Border.Background>
-                        <ImageBrush x:Name="img_Ar"  Stretch="Fill"  ImageSource="/pic/programs-sales-login-bg.png"/>
+                        <ImageBrush x:Name="img_Ar"  Stretch="Fill"  ImageSource="/pic/programs-sales-login-bg.jpg"/>
                     </Border.Background>
                 </Border>
             </Grid>

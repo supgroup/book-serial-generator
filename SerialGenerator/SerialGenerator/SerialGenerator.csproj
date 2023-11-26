@@ -425,6 +425,8 @@
       <DependentUpon>bookModel.edmx</DependentUpon>
       <LastGenOutput>bookModel.cs</LastGenOutput>
     </Content>
+    <Resource Include="pic\programs-sales-login-bg.jpg" />
+    <Resource Include="pic\programs-sales-login-bg.png" />
     <Content Include="Reports\SectionData\Ar\ArPassenger.rdlc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -619,9 +621,6 @@
       <Project>{211d37ef-74f8-4e4f-9ed0-da4566f423f5}</Project>
       <Name>netoaster</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="pic\programs-sales-login-bg.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">

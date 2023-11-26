@@ -83,8 +83,8 @@
                                 <Path Fill="{StaticResource LightGrey}" x:Name="path_iconBookSales"
                                   Stretch="Fill" 
                               HorizontalAlignment="Left" Grid.Column="0"  
-                         VerticalAlignment="Center" Width="30" Height="20" Tag="bookSales" 
-                              Data="{StaticResource passportTicket}" 
+                         VerticalAlignment="Center" Width="15" Height="20" Tag="bookSales" 
+                              Data="{StaticResource LockIcon}" 
                                   Margin="10,0,10,0"/>
                                 <TextBlock Text="book sales" Foreground="{StaticResource LightGrey}" x:Name="txt_bookSales"
                                    HorizontalAlignment="Left" VerticalAlignment="Center" 
@@ -99,7 +99,7 @@
                              materialDesign:ButtonAssist.CornerRadius="15"
                     Background="{x:Null}" BorderBrush="{x:Null}"   
                     materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                    Padding="0" Click="Btn_accounting_Click" >
+                    Padding="0" Click="Btn_accounting_Click" Visibility="Collapsed" >
                         <Border x:Name="brd_accounting" Tag="accounting" Visibility="Collapsed">
 
                             <Grid Width="200" Height="40" >
@@ -127,7 +127,7 @@
                              materialDesign:ButtonAssist.CornerRadius="15"
                     Background="{x:Null}" BorderBrush="{x:Null}"   
                     materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                    Padding="0" Click="Btn_reports_Click" >
+                    Padding="0" Click="Btn_reports_Click" Visibility="Collapsed" >
                         <Border x:Name="brd_reports" Tag="reports">
 
                             <Grid Width="200" Height="40" Visibility="Collapsed" >
@@ -155,7 +155,7 @@
                              materialDesign:ButtonAssist.CornerRadius="15"
                     Background="{StaticResource White}" BorderBrush="{x:Null}"   
                     materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                    Padding="0" Click="Btn_sectionData_Click">
+                    Padding="0" Click="Btn_sectionData_Click" Visibility="Collapsed">
                         <Border x:Name="brd_sectionData" Tag="sectionData" Visibility="Collapsed">
 
                             <Grid Width="200" Height="40" >
@@ -183,7 +183,7 @@
                              materialDesign:ButtonAssist.CornerRadius="15"
                     Background="{x:Null}" BorderBrush="{x:Null}"   
                     materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                    Padding="0" Click="Btn_settings_Click" >
+                    Padding="0" Click="Btn_settings_Click" Visibility="Collapsed" >
                         <Border x:Name="brd_settings" Tag="settings" Visibility="Collapsed">
 
                             <Grid Width="200" Height="40" >

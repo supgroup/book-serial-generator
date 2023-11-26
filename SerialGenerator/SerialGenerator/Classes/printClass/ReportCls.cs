@@ -1251,8 +1251,8 @@ namespace SerialGenerator.Classes
         {
             try
             {
-                  string Decripted = ReportCls.Base64ToString(textvalue);
-                 Decripted = ReportCls.DeCompressThenDecrypt(Decripted);
+                  string Decripted = Base64ToString(textvalue);
+                 Decripted = DeCompressThenDecrypt(Decripted);
                 return Decripted;
             }
             catch
