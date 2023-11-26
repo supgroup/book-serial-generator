@@ -888,7 +888,7 @@ namespace SerialGenerator.View.sectionData
             {
                 if (sender != null)
                     HelpClass.StartAwait(grid_main);
-                if (customerSerialsModel.customerSerialId > 0 && !string.IsNullOrEmpty(customerSerialsModel.customerHardCode))
+                if (customerSerialsModel.customerSerialId > 0 && !string.IsNullOrEmpty(tb_customerCode.Text))
                 {
                     //string encodekey = "";
                     //activeModel = new ActivateModel();
